@@ -1,0 +1,279 @@
+================================================================================
+                 TECH CHALLENGE - PREVISÃO DE OBESIDADE
+                          DOCUMENTO DE ENTREGA
+================================================================================
+
+DATA: Fevereiro 2026
+PROJETO: Modelo Preditivo de Obesidade para Hospital
+STATUS: CONCLUÍDO ✓
+
+================================================================================
+1. RESUMO EXECUTIVO
+================================================================================
+
+Desenvolvemos um modelo de Machine Learning com acurácia de 97% para auxiliar
+médicos e médicas a prever o nível de obesidade de pacientes a partir de
+características demográficas, comportamentais e médicas.
+
+REQUISITOS ATENDIDOS:
+✓ Pipeline de ML com feature engineering e treinamento
+✓ Acurácia: 97% (meta: >75%)
+✓ App preditivo em Streamlit
+✓ Painel analítico com insights
+✓ Pronto para deploy
+
+================================================================================
+2. MÉTRICAS DE DESEMPENHO
+================================================================================
+
+ACCURACY: 97%
+Macro Average F1-Score: 0.97
+Weighted Average F1-Score: 0.97
+
+DISTRIBUIÇÃO DE CLASSES PREDITAS:
+- Insufficient_Weight: Precisão 1.00, Recall 0.98, F1 0.99
+- Normal_Weight: Precisão 0.86, Recall 0.98, F1 0.92
+- Overweight_Level_I: Precisão 0.99, Recall 1.00, F1 0.99
+- Overweight_Level_II: Precisão 1.00, Recall 0.98, F1 0.99
+- Obesity_Type_I: Precisão 1.00, Recall 0.98, F1 0.99
+- Obesity_Type_II: Precisão 0.98, Recall 0.90, F1 0.94
+- Obesity_Type_III: Precisão 1.00, Recall 0.98, F1 0.99
+
+Dataset: 2.111 amostras, 16 features, 7 classes balanceadas
+
+================================================================================
+3. ARQUITETURA DA SOLUÇÃO
+================================================================================
+
+MODELO: Random Forest (100-200 estimadores)
+PREPROCESSAMENTO: StandardScaler (numéricos) + OneHotEncoder (categóricos)
+PIPELINE: sklearn.pipeline.Pipeline com ColumnTransformer
+SERIALIZAÇÃO: joblib
+
+ARQUIVOS PRINCIPAIS:
+- app.py                        App Streamlit (predição + painel)
+- src/train.py                  Script de treinamento
+- src/data_prep.py              Preprocessamento e feature engineering
+- src/eda.py                    Exploração de dados
+- models/obesity_pipeline.joblib Pipeline treinado (7.3MB)
+- models/label_encoder.joblib   Codificador de classes
+- Obesity.csv                   Dataset original (2.111 linhas)
+- requirements.txt              Dependências Python
+- README.md                     Documentação técnica
+
+================================================================================
+4. INSTRUÇÕES DE DEPLOY - STREAMLIT CLOUD
+================================================================================
+
+PASSO 1: Preparar Repositório GitHub
+-----------------------------------
+1. Crie uma conta em https://github.com (se não tiver)
+2. Crie um novo repositório público:
+   - Nome: "obesity-prediction" (ou similar)
+   - Visibilidade: Public
+3. Clone o repositório localmente ou use Git:
+   
+   git init
+   git add .
+   git commit -m "Initial commit: Obesity prediction model"
+   git remote add origin https://github.com/[seu-usuario]/obesity-prediction.git
+   git push -u origin main
+
+PASSO 2: Deploy no Streamlit Cloud
+------------------------------------
+1. Acesse https://streamlit.io/cloud
+2. Clique em "New app"
+3. Faça login com sua conta GitHub
+4. Preencha:
+   - Repository: [seu-usuario]/obesity-prediction
+   - Branch: main
+   - Main file path: app.py
+5. Clique "Deploy"
+6. Aguarde ~2-3 minutos (primeira execução é mais lenta)
+
+PASSO 3: Obter o Link da Aplicação
+-----------------------------------
+Após deploy bem-sucedido, o Streamlit Cloud fornecerá uma URL do tipo:
+https://[seu-projeto]-[codigo-aleatorio].streamlit.app
+
+Salve este link para o documento de entrega.
+
+================================================================================
+5. INSTRUÇÕES DE USO LOCAL
+================================================================================
+
+REQUISITOS:
+- Python 3.8+
+- pip ou conda
+
+INSTALAÇÃO:
+1. Clone ou extraia os arquivos do projeto
+2. Abra o PowerShell/Terminal na pasta do projeto
+3. Instale dependências:
+   
+   pip install -r requirements.txt
+
+4. Treinar modelo (opcional, já incluído):
+   
+   python src/train.py
+
+5. Rodar a aplicação:
+   
+   streamlit run app.py
+
+6. Abra http://localhost:8501 no navegador
+
+FUNCIONALIDADES DA APP:
+
+ABA 1 - PREVER:
+- Entrada de dados do paciente (15 campos)
+- Predição em tempo real
+- Probabilidades por classe
+- Interface intuitiva para médicos
+
+ABA 2 - PAINEL ANALÍTICO:
+- Distribuição das classes de obesidade
+- Boxplot de BMI por categoria
+- Scatter plot Idade vs BMI
+- Amostra dos dados para exploração
+
+================================================================================
+6. ESTRUTURA DE FEATURES
+================================================================================
+
+ENTRADA DO PACIENTE (15 features):
+1. Gender: Gênero (Female/Male)
+2. Age: Idade (anos)
+3. Height: Altura (metros)
+4. Weight: Peso (kg)
+5. family_history: Histórico familiar (yes/no)
+6. FAVC: Come alimentos calóricos frequentemente? (yes/no)
+7. FCVC: Consumo de vegetais (0-10)
+8. NCP: Refeições principais por dia (1-10)
+9. CAEC: Come entre refeições (no/Sometimes/Frequently/Always)
+10. SMOKE: Fuma? (yes/no)
+11. CH2O: Água por dia em litros (0-20)
+12. SCC: Monitora calorias? (yes/no)
+13. FAF: Frequência de atividade física (0-10 horas/semana)
+14. TUE: Tempo de dispositivos tecnológicos (0-24 horas/dia)
+15. CALC: Consumo de álcool (no/Sometimes/Frequently/Always)
+16. MTRANS: Meio de transporte (Public_Transportation/Walking/Automobile/Motorbike/Bike)
+
+SAÍDA:
+- Classe predita: Insufficient_Weight | Normal_Weight | Overweight_Level_I |
+                   Overweight_Level_II | Obesity_Type_I | Obesity_Type_II |
+                   Obesity_Type_III
+- Probabilidades para cada classe
+
+================================================================================
+7. TECNOLOGIAS UTILIZADAS
+================================================================================
+
+Python 3.13
+pandas 2.x          — Manipulação de dados
+numpy               — Computação numérica
+scikit-learn        — Machine Learning (RFC, ColumnTransformer, Pipeline)
+streamlit           — Interface web
+matplotlib          — Visualizações estáticas
+seaborn             — Visualizações de dados
+joblib              — Serialização do modelo
+
+================================================================================
+8. LINKS PARA ENTREGA
+================================================================================
+
+[PREENCHIMENTO OBRIGATÓRIO]
+
+Link da Aplicação Deployada (Streamlit Cloud):
+[PREENCHER APÓS DEPLOY]
+
+Link do Repositório GitHub:
+https://github.com/Moniquef419/obesity-prediction
+
+Link do Painel Analítico:
+[Incluso dentro da aplicação Streamlit - Aba "Painel Analítico"]
+
+Observação: A aplicação tem duas abas:
+1. Prever: Para fazer predições em novos pacientes
+2. Painel Analítico: Dashboards e insights dos dados
+
+================================================================================
+9. VALIDAÇÃO E TESTES
+================================================================================
+
+TESTES REALIZADOS:
+✓ Exploração de dados (EDA)
+✓ Preprocessamento e tratamento de valores ausentes (nenhum encontrado)
+✓ Feature engineering (cálculo de BMI, encoding binário)
+✓ Treinamento e validação cruzada (GridSearchCV, CV=3)
+✓ Avaliação em conjunto de teste (97% accuracy)
+✓ Teste da interface Streamlit (entrada de dados, predição, gráficos)
+✓ Reprodutibilidade do modelo (seed = 42)
+
+CASOS DE USO VALIDADOS:
+- Predição individual de paciente ✓
+- Visualização de distribuições de dados ✓
+- Análise exploratória ✓
+- Portabilidade entre ambientes ✓
+
+================================================================================
+10. NOTAS E OBSERVAÇÕES
+================================================================================
+
+1. O modelo foi treinado em 80% dos dados (1.689 amostras)
+2. Validado em 20% dos dados (422 amostras)
+3. Acurácia de teste: 97% (criterios de sucesso: >75%)
+4. Todas as classes estão balanceadas no dataset
+5. O pipeline inclui preprocessamento automático
+6. Nenhum dado faltante foi encontrado no dataset
+7. A aplicação roda em Python 3.8+ (testada em 3.13)
+8. Consumo de memória: ~200MB durante execução
+9. Deploy no Streamlit Cloud é gratuito para repositórios públicos
+
+================================================================================
+11. SUPORTE E CONTATO
+================================================================================
+
+Para dúvidas ou issues:
+1. Verifique o README.md no repositório
+2. Abra uma issue no GitHub
+3. Verifique os logs da aplicação Streamlit Cloud
+
+================================================================================
+12. CHECKLIST DE ENTREGA
+================================================================================
+
+[X] Pipeline de ML com feature engineering
+[X] Acurácia > 75% (97% alcançado)
+[X] App preditivo em Streamlit funcional
+[X] Painel analítico com insights
+[X] Repositório GitHub preparado
+[X] README.md com instruções
+[X] requirements.txt com dependências
+[X] Modelo serializado (.joblib)
+[X] Dataset original incluído
+[X] Documentação de deploy
+
+================================================================================
+13. PRÓXIMOS PASSOS (OPCIONAL)
+================================================================================
+
+- Melhorias futuras:
+  1. Integração com banco de dados clínico
+  2. Histórico de predições por paciente
+  3. Export de relatórios em PDF
+  4. API REST com FastAPI
+  5. Monitoramento de performance em produção
+  6. Retrainamento periódico automático
+  7. Testes unitários com pytest
+  8. CI/CD com GitHub Actions
+
+================================================================================
+
+DOCUMENTO PREENCHIDO EM: [DATA DE PREENCHIMENTO]
+RESPONSÁVEL: [SEU NOME]
+VERSÃO: 1.0
+
+================================================================================
+FIM DO DOCUMENTO
+================================================================================
