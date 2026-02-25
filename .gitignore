@@ -45,6 +45,7 @@ venv.bak/
 # Data (optional, keep CSV)
 *.pkl
 *.joblib
+!models/*.joblib
 data/raw/
 data/processed/
 
