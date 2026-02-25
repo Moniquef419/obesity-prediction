@@ -190,16 +190,16 @@ if menu == "Prever":
         weight = st.number_input("Peso (kg) - faixa tipica 39-173", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
         family_history_label = st.selectbox("Historico familiar de excesso de peso?", list(yn_map.keys()))
         favc_label = st.selectbox("Consome alimentos caloricos com frequencia?", list(yn_map.keys()))
-        fcvc = st.number_input("FCVC (1-3): 1 raramente, 2 as vezes, 3 sempre", min_value=1.0, max_value=3.0, value=2.0, step=1.0)
+        fcvc = st.number_input("FCVC (1-3): 1 raramente, 2 as vezes, 3 sempre", min_value=1, max_value=3, value=2, step=1)
 
     with col2:
-        ncp = st.number_input("NCP (1-4): numero de refeicoes principais", min_value=1.0, max_value=4.0, value=3.0, step=1.0)
+        ncp = st.number_input("NCP (1-4): numero de refeicoes principais", min_value=1, max_value=4, value=3, step=1)
         caec_label = st.selectbox("Come entre refeicoes (CAEC)?", list(caec_map.keys()))
         smoke_label = st.selectbox("Fuma?", list(yn_map.keys()))
-        ch2o = st.number_input("CH2O (1-3): 1 <1L, 2 1-2L, 3 >2L", min_value=1.0, max_value=3.0, value=2.0, step=1.0)
+        ch2o = st.number_input("CH2O (1-3): 1 <1L, 2 1-2L, 3 >2L", min_value=1, max_value=3, value=2, step=1)
         scc_label = st.selectbox("Monitora calorias (SCC)?", list(yn_map.keys()))
-        faf = st.number_input("FAF (0-3): frequencia de atividade fisica", min_value=0.0, max_value=3.0, value=1.0, step=1.0)
-        tue = st.number_input("TUE (0-2): tempo em dispositivos eletronicos", min_value=0.0, max_value=2.0, value=1.0, step=1.0)
+        faf = st.number_input("FAF (0-3): frequencia de atividade fisica", min_value=0, max_value=3, value=1, step=1)
+        tue = st.number_input("TUE (0-2): tempo em dispositivos eletronicos", min_value=0, max_value=2, value=1, step=1)
         calc_label = st.selectbox("Consumo de alcool (CALC)", list(calc_map.keys()))
         mtrans_label = st.selectbox("Meio de transporte (MTRANS)", list(mtrans_map.keys()))
 
