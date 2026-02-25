@@ -185,21 +185,21 @@ if menu == "Prever":
 
     with col1:
         gender_label = st.selectbox("Genero", list(gender_map.keys()))
-        age = st.number_input("Idade", min_value=1, max_value=120, value=30)
-        height = st.number_input("Altura (m)", min_value=0.5, max_value=2.5, value=1.7)
-        weight = st.number_input("Peso (kg)", min_value=10.0, max_value=300.0, value=70.0)
+        age = st.number_input("Idade (14-61 anos)", min_value=14, max_value=61, value=30)
+        height = st.number_input("Altura (m) - faixa tipica 1.45-1.98", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
+        weight = st.number_input("Peso (kg) - faixa tipica 39-173", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
         family_history_label = st.selectbox("Historico familiar de excesso de peso?", list(yn_map.keys()))
         favc_label = st.selectbox("Consome alimentos caloricos com frequencia?", list(yn_map.keys()))
-        fcvc = st.number_input("Consumo de vegetais (FCVC)", min_value=0.0, max_value=10.0, value=2.0)
+        fcvc = st.number_input("FCVC (1-3): 1 raramente, 2 as vezes, 3 sempre", min_value=1.0, max_value=3.0, value=2.0, step=1.0)
 
     with col2:
-        ncp = st.number_input("Refeicoes por dia (NCP)", min_value=1.0, max_value=10.0, value=3.0)
+        ncp = st.number_input("NCP (1-4): numero de refeicoes principais", min_value=1.0, max_value=4.0, value=3.0, step=1.0)
         caec_label = st.selectbox("Come entre refeicoes (CAEC)?", list(caec_map.keys()))
         smoke_label = st.selectbox("Fuma?", list(yn_map.keys()))
-        ch2o = st.number_input("Agua por dia (CH2O)", min_value=0.0, max_value=20.0, value=2.0)
+        ch2o = st.number_input("CH2O (1-3): 1 <1L, 2 1-2L, 3 >2L", min_value=1.0, max_value=3.0, value=2.0, step=1.0)
         scc_label = st.selectbox("Monitora calorias (SCC)?", list(yn_map.keys()))
-        faf = st.number_input("Atividade fisica (FAF)", min_value=0.0, max_value=10.0, value=1.0)
-        tue = st.number_input("Tempo em dispositivos (TUE)", min_value=0.0, max_value=24.0, value=1.0)
+        faf = st.number_input("FAF (0-3): frequencia de atividade fisica", min_value=0.0, max_value=3.0, value=1.0, step=1.0)
+        tue = st.number_input("TUE (0-2): tempo em dispositivos eletronicos", min_value=0.0, max_value=2.0, value=1.0, step=1.0)
         calc_label = st.selectbox("Consumo de alcool (CALC)", list(calc_map.keys()))
         mtrans_label = st.selectbox("Meio de transporte (MTRANS)", list(mtrans_map.keys()))
 
@@ -213,6 +213,11 @@ if menu == "Prever":
             scc = yn_map[scc_label]
             calc = calc_map[calc_label]
             mtrans = mtrans_map[mtrans_label]
+            fcvc = float(np.clip(np.rint(fcvc), 1, 3))
+            ncp = float(np.clip(np.rint(ncp), 1, 4))
+            ch2o = float(np.clip(np.rint(ch2o), 1, 3))
+            faf = float(np.clip(np.rint(faf), 0, 3))
+            tue = float(np.clip(np.rint(tue), 0, 2))
 
             bmi = weight / (height ** 2)
             X = pd.DataFrame(

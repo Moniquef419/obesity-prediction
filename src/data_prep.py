@@ -52,6 +52,19 @@ def preprocess(df, fit_label=True):
     # features
     X = df.drop(columns=[target])
 
+    # Variaveis de escala: arredondar ruido decimal e limitar ao intervalo valido.
+    scale_specs = {
+        'FCVC': (1, 3),
+        'NCP': (1, 4),
+        'CH2O': (1, 3),
+        'FAF': (0, 3),
+        'TUE': (0, 2),
+    }
+    for col, (lower, upper) in scale_specs.items():
+        if col in X.columns:
+            X[col] = pd.to_numeric(X[col], errors='coerce')
+            X[col] = np.rint(X[col]).clip(lower, upper)
+
     # map binary yes/no to 1/0 where applicable
     for col in X.columns:
         if X[col].dtype == 'object':

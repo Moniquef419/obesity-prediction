@@ -1,77 +1,77 @@
-================================================================================
-                 TECH CHALLENGE - PREVISÃO DE OBESIDADE
+﻿================================================================================
+                 TECH CHALLENGE - PREVISÃƒO DE OBESIDADE
                           DOCUMENTO DE ENTREGA
 ================================================================================
 
 DATA: Fevereiro 2026
 PROJETO: Modelo Preditivo de Obesidade para Hospital
-STATUS: CONCLUÍDO ✓
+STATUS: CONCLUÃDO âœ“
 
 ================================================================================
 1. RESUMO EXECUTIVO
 ================================================================================
 
-Desenvolvemos um modelo de Machine Learning com acurácia de 97% para auxiliar
-médicos e médicas a prever o nível de obesidade de pacientes a partir de
-características demográficas, comportamentais e médicas.
+Desenvolvemos um modelo de Machine Learning com acuracia de 96% para auxiliar
+mÃ©dicos e mÃ©dicas a prever o nÃ­vel de obesidade de pacientes a partir de
+caracterÃ­sticas demogrÃ¡ficas, comportamentais e mÃ©dicas.
 
 REQUISITOS ATENDIDOS:
-✓ Pipeline de ML com feature engineering e treinamento
-✓ Acurácia: 97% (meta: >75%)
-✓ App preditivo em Streamlit
-✓ Painel analítico com insights
-✓ Pronto para deploy
+âœ“ Pipeline de ML com feature engineering e treinamento
+âœ“ Acuracia: 96% (meta: >75%)
+âœ“ App preditivo em Streamlit
+âœ“ Painel analÃ­tico com insights
+âœ“ Pronto para deploy
 
 ================================================================================
-2. MÉTRICAS DE DESEMPENHO
+2. MÃ‰TRICAS DE DESEMPENHO
 ================================================================================
 
-ACCURACY: 97%
-Macro Average F1-Score: 0.97
-Weighted Average F1-Score: 0.97
+ACCURACY: 96%
+Macro Average F1-Score: 0.96
+Weighted Average F1-Score: 0.96
 
-DISTRIBUIÇÃO DE CLASSES PREDITAS:
-- Insufficient_Weight: Precisão 1.00, Recall 0.98, F1 0.99
-- Normal_Weight: Precisão 0.86, Recall 0.98, F1 0.92
-- Overweight_Level_I: Precisão 0.99, Recall 1.00, F1 0.99
-- Overweight_Level_II: Precisão 1.00, Recall 0.98, F1 0.99
-- Obesity_Type_I: Precisão 1.00, Recall 0.98, F1 0.99
-- Obesity_Type_II: Precisão 0.98, Recall 0.90, F1 0.94
-- Obesity_Type_III: Precisão 1.00, Recall 0.98, F1 0.99
+DISTRIBUIÃ‡ÃƒO DE CLASSES PREDITAS:
+- Insufficient_Weight: PrecisÃ£o 1.00, Recall 0.98, F1 0.99
+- Normal_Weight: Precisao 0.86, Recall 0.95, F1 0.90
+- Overweight_Level_I: PrecisÃ£o 0.99, Recall 1.00, F1 0.99
+- Overweight_Level_II: Precisao 0.97, Recall 0.98, F1 0.98
+- Obesity_Type_I: PrecisÃ£o 1.00, Recall 0.98, F1 0.99
+- Obesity_Type_II: Precisao 0.94, Recall 0.88, F1 0.91
+- Obesity_Type_III: PrecisÃ£o 1.00, Recall 0.98, F1 0.99
 
 Dataset: 2.111 amostras, 16 features, 7 classes balanceadas
 
 ================================================================================
-3. ARQUITETURA DA SOLUÇÃO
+3. ARQUITETURA DA SOLUÃ‡ÃƒO
 ================================================================================
 
 MODELO: Random Forest (100-200 estimadores)
-PREPROCESSAMENTO: StandardScaler (numéricos) + OneHotEncoder (categóricos)
+PREPROCESSAMENTO: StandardScaler (numÃ©ricos) + OneHotEncoder (categÃ³ricos)
 PIPELINE: sklearn.pipeline.Pipeline com ColumnTransformer
-SERIALIZAÇÃO: joblib
+SERIALIZAÃ‡ÃƒO: joblib
 
 ARQUIVOS PRINCIPAIS:
-- app.py                        App Streamlit (predição + painel)
+- app.py                        App Streamlit (prediÃ§Ã£o + painel)
 - src/train.py                  Script de treinamento
 - src/data_prep.py              Preprocessamento e feature engineering
-- src/eda.py                    Exploração de dados
+- src/eda.py                    ExploraÃ§Ã£o de dados
 - models/obesity_pipeline.joblib Pipeline treinado (7.3MB)
 - models/label_encoder.joblib   Codificador de classes
 - Obesity.csv                   Dataset original (2.111 linhas)
-- requirements.txt              Dependências Python
-- README.md                     Documentação técnica
+- requirements.txt              DependÃªncias Python
+- README.md                     DocumentaÃ§Ã£o tÃ©cnica
 
 ================================================================================
-4. INSTRUÇÕES DE DEPLOY - STREAMLIT CLOUD
+4. INSTRUÃ‡Ã•ES DE DEPLOY - STREAMLIT CLOUD
 ================================================================================
 
-PASSO 1: Preparar Repositório GitHub
+PASSO 1: Preparar RepositÃ³rio GitHub
 -----------------------------------
-1. Crie uma conta em https://github.com (se não tiver)
-2. Crie um novo repositório público:
+1. Crie uma conta em https://github.com (se nÃ£o tiver)
+2. Crie um novo repositÃ³rio pÃºblico:
    - Nome: "obesity-prediction" (ou similar)
    - Visibilidade: Public
-3. Clone o repositório localmente ou use Git:
+3. Clone o repositÃ³rio localmente ou use Git:
    
    git init
    git add .
@@ -83,41 +83,41 @@ PASSO 2: Deploy no Streamlit Cloud
 ------------------------------------
 1. Acesse https://streamlit.io/cloud
 2. Clique em "New app"
-3. Faça login com sua conta GitHub
+3. FaÃ§a login com sua conta GitHub
 4. Preencha:
    - Repository: [seu-usuario]/obesity-prediction
    - Branch: main
    - Main file path: app.py
 5. Clique "Deploy"
-6. Aguarde ~2-3 minutos (primeira execução é mais lenta)
+6. Aguarde ~2-3 minutos (primeira execuÃ§Ã£o Ã© mais lenta)
 
-PASSO 3: Obter o Link da Aplicação
+PASSO 3: Obter o Link da AplicaÃ§Ã£o
 -----------------------------------
-Após deploy bem-sucedido, o Streamlit Cloud fornecerá uma URL do tipo:
+ApÃ³s deploy bem-sucedido, o Streamlit Cloud fornecerÃ¡ uma URL do tipo:
 https://[seu-projeto]-[codigo-aleatorio].streamlit.app
 
 Salve este link para o documento de entrega.
 
 ================================================================================
-5. INSTRUÇÕES DE USO LOCAL
+5. INSTRUÃ‡Ã•ES DE USO LOCAL
 ================================================================================
 
 REQUISITOS:
 - Python 3.8+
 - pip ou conda
 
-INSTALAÇÃO:
+INSTALAÃ‡ÃƒO:
 1. Clone ou extraia os arquivos do projeto
 2. Abra o PowerShell/Terminal na pasta do projeto
-3. Instale dependências:
+3. Instale dependÃªncias:
    
    pip install -r requirements.txt
 
-4. Treinar modelo (opcional, já incluído):
+4. Treinar modelo (opcional, jÃ¡ incluÃ­do):
    
    python src/train.py
 
-5. Rodar a aplicação:
+5. Rodar a aplicaÃ§Ã£o:
    
    streamlit run app.py
 
@@ -127,39 +127,39 @@ FUNCIONALIDADES DA APP:
 
 ABA 1 - PREVER:
 - Entrada de dados do paciente (15 campos)
-- Predição em tempo real
+- PrediÃ§Ã£o em tempo real
 - Probabilidades por classe
-- Interface intuitiva para médicos
+- Interface intuitiva para mÃ©dicos
 
-ABA 2 - PAINEL ANALÍTICO:
-- Distribuição das classes de obesidade
+ABA 2 - PAINEL ANALÃTICO:
+- DistribuiÃ§Ã£o das classes de obesidade
 - Boxplot de BMI por categoria
 - Scatter plot Idade vs BMI
-- Amostra dos dados para exploração
+- Amostra dos dados para exploraÃ§Ã£o
 
 ================================================================================
 6. ESTRUTURA DE FEATURES
 ================================================================================
 
 ENTRADA DO PACIENTE (15 features):
-1. Gender: Gênero (Female/Male)
+1. Gender: GÃªnero (Female/Male)
 2. Age: Idade (anos)
 3. Height: Altura (metros)
 4. Weight: Peso (kg)
-5. family_history: Histórico familiar (yes/no)
-6. FAVC: Come alimentos calóricos frequentemente? (yes/no)
+5. family_history: HistÃ³rico familiar (yes/no)
+6. FAVC: Come alimentos calÃ³ricos frequentemente? (yes/no)
 7. FCVC: Consumo de vegetais (0-10)
-8. NCP: Refeições principais por dia (1-10)
-9. CAEC: Come entre refeições (no/Sometimes/Frequently/Always)
+8. NCP: RefeiÃ§Ãµes principais por dia (1-10)
+9. CAEC: Come entre refeiÃ§Ãµes (no/Sometimes/Frequently/Always)
 10. SMOKE: Fuma? (yes/no)
-11. CH2O: Água por dia em litros (0-20)
+11. CH2O: Ãgua por dia em litros (0-20)
 12. SCC: Monitora calorias? (yes/no)
-13. FAF: Frequência de atividade física (0-10 horas/semana)
-14. TUE: Tempo de dispositivos tecnológicos (0-24 horas/dia)
-15. CALC: Consumo de álcool (no/Sometimes/Frequently/Always)
+13. FAF: FrequÃªncia de atividade fÃ­sica (0-10 horas/semana)
+14. TUE: Tempo de dispositivos tecnolÃ³gicos (0-24 horas/dia)
+15. CALC: Consumo de Ã¡lcool (no/Sometimes/Frequently/Always)
 16. MTRANS: Meio de transporte (Public_Transportation/Walking/Automobile/Motorbike/Bike)
 
-SAÍDA:
+SAÃDA:
 - Classe predita: Insufficient_Weight | Normal_Weight | Overweight_Level_I |
                    Overweight_Level_II | Obesity_Type_I | Obesity_Type_II |
                    Obesity_Type_III
@@ -170,110 +170,112 @@ SAÍDA:
 ================================================================================
 
 Python 3.13
-pandas 2.x          — Manipulação de dados
-numpy               — Computação numérica
-scikit-learn        — Machine Learning (RFC, ColumnTransformer, Pipeline)
-streamlit           — Interface web
-matplotlib          — Visualizações estáticas
-seaborn             — Visualizações de dados
-joblib              — Serialização do modelo
+pandas 2.x          â€” ManipulaÃ§Ã£o de dados
+numpy               â€” ComputaÃ§Ã£o numÃ©rica
+scikit-learn        â€” Machine Learning (RFC, ColumnTransformer, Pipeline)
+streamlit           â€” Interface web
+matplotlib          â€” VisualizaÃ§Ãµes estÃ¡ticas
+seaborn             â€” VisualizaÃ§Ãµes de dados
+joblib              â€” SerializaÃ§Ã£o do modelo
 
 ================================================================================
 8. LINKS PARA ENTREGA
 ================================================================================
 
-[PREENCHIMENTO OBRIGATÓRIO]
+[PREENCHIMENTO OBRIGATÃ“RIO]
 
-Link da Aplicação Deployada (Streamlit Cloud):
+Link da AplicaÃ§Ã£o Deployada (Streamlit Cloud):
 https://obesity-prediction-88xpnqobj52yf24o45r2la.streamlit.app
 
-Link do Repositório GitHub:
+Link do RepositÃ³rio GitHub:
 https://github.com/Moniquef419/obesity-prediction
 
-Link do Painel Analítico:
-Incluso dentro da aplicação Streamlit (aba "Análise")
+Link do Painel AnalÃ­tico:
+Incluso dentro da aplicaÃ§Ã£o Streamlit (aba "AnÃ¡lise")
 
-Observação: A aplicação tem duas abas:
-1. Prever: Para fazer predições em novos pacientes
-2. Análise: Dashboards e insights dos dados
+ObservaÃ§Ã£o: A aplicaÃ§Ã£o tem duas abas:
+1. Prever: Para fazer prediÃ§Ãµes em novos pacientes
+2. AnÃ¡lise: Dashboards e insights dos dados
 
 ================================================================================
-9. VALIDAÇÃO E TESTES
+9. VALIDAÃ‡ÃƒO E TESTES
 ================================================================================
 
 TESTES REALIZADOS:
-✓ Exploração de dados (EDA)
-✓ Preprocessamento e tratamento de valores ausentes (nenhum encontrado)
-✓ Feature engineering (cálculo de BMI, encoding binário)
-✓ Treinamento e validação cruzada (GridSearchCV, CV=3)
-✓ Avaliação em conjunto de teste (97% accuracy)
-✓ Teste da interface Streamlit (entrada de dados, predição, gráficos)
-✓ Reprodutibilidade do modelo (seed = 42)
+âœ“ ExploraÃ§Ã£o de dados (EDA)
+âœ“ Preprocessamento e tratamento de valores ausentes (nenhum encontrado)
+âœ“ Feature engineering (cÃ¡lculo de BMI, encoding binÃ¡rio)
+âœ“ Treinamento e validaÃ§Ã£o cruzada (GridSearchCV, CV=3)
+âœ“ Avaliacao em conjunto de teste (96% accuracy)
+âœ“ Teste da interface Streamlit (entrada de dados, prediÃ§Ã£o, grÃ¡ficos)
+âœ“ Reprodutibilidade do modelo (seed = 42)
 
 CASOS DE USO VALIDADOS:
-- Predição individual de paciente ✓
-- Visualização de distribuições de dados ✓
-- Análise exploratória ✓
-- Portabilidade entre ambientes ✓
+- PrediÃ§Ã£o individual de paciente âœ“
+- VisualizaÃ§Ã£o de distribuiÃ§Ãµes de dados âœ“
+- AnÃ¡lise exploratÃ³ria âœ“
+- Portabilidade entre ambientes âœ“
 
 ================================================================================
-10. NOTAS E OBSERVAÇÕES
+10. NOTAS E OBSERVAÃ‡Ã•ES
 ================================================================================
 
 1. O modelo foi treinado em 80% dos dados (1.689 amostras)
-2. Validado em 20% dos dados (422 amostras)
-3. Acurácia de teste: 97% (criterios de sucesso: >75%)
-4. Todas as classes estão balanceadas no dataset
-5. O pipeline inclui preprocessamento automático
+2. Validado em 20% dos dados (423 amostras)
+3. Acuracia de teste: 96% (criterios de sucesso: >75%)
+4. Todas as classes estÃ£o balanceadas no dataset
+5. O pipeline inclui preprocessamento automÃ¡tico
 6. Nenhum dado faltante foi encontrado no dataset
-7. A aplicação roda em Python 3.8+ (testada em 3.13)
-8. Consumo de memória: ~200MB durante execução
-9. Deploy no Streamlit Cloud é gratuito para repositórios públicos
+7. A aplicaÃ§Ã£o roda em Python 3.8+ (testada em 3.13)
+8. Consumo de memÃ³ria: ~200MB durante execuÃ§Ã£o
+9. Deploy no Streamlit Cloud Ã© gratuito para repositÃ³rios pÃºblicos
 
 ================================================================================
 11. SUPORTE E CONTATO
 ================================================================================
 
-Para dúvidas ou issues:
-1. Verifique o README.md no repositório
+Para dÃºvidas ou issues:
+1. Verifique o README.md no repositÃ³rio
 2. Abra uma issue no GitHub
-3. Verifique os logs da aplicação Streamlit Cloud
+3. Verifique os logs da aplicaÃ§Ã£o Streamlit Cloud
 
 ================================================================================
 12. CHECKLIST DE ENTREGA
 ================================================================================
 
 [X] Pipeline de ML com feature engineering
-[X] Acurácia > 75% (97% alcançado)
+[X] Acuracia > 75% (96% alcancado)
 [X] App preditivo em Streamlit funcional
-[X] Painel analítico com insights
-[X] Repositório GitHub preparado
-[X] README.md com instruções
-[X] requirements.txt com dependências
+[X] Painel analÃ­tico com insights
+[X] RepositÃ³rio GitHub preparado
+[X] README.md com instruÃ§Ãµes
+[X] requirements.txt com dependÃªncias
 [X] Modelo serializado (.joblib)
-[X] Dataset original incluído
-[X] Documentação de deploy
+[X] Dataset original incluÃ­do
+[X] DocumentaÃ§Ã£o de deploy
 
 ================================================================================
-13. PRÓXIMOS PASSOS (OPCIONAL)
+13. PRÃ“XIMOS PASSOS (OPCIONAL)
 ================================================================================
 
 - Melhorias futuras:
-  1. Integração com banco de dados clínico
-  2. Histórico de predições por paciente
-  3. Export de relatórios em PDF
+  1. IntegraÃ§Ã£o com banco de dados clÃ­nico
+  2. HistÃ³rico de prediÃ§Ãµes por paciente
+  3. Export de relatÃ³rios em PDF
   4. API REST com FastAPI
-  5. Monitoramento de performance em produção
-  6. Retrainamento periódico automático
-  7. Testes unitários com pytest
+  5. Monitoramento de performance em produÃ§Ã£o
+  6. Retrainamento periÃ³dico automÃ¡tico
+  7. Testes unitÃ¡rios com pytest
   8. CI/CD com GitHub Actions
 
 ================================================================================
 
 DOCUMENTO PREENCHIDO EM: [DATA DE PREENCHIMENTO]
-RESPONSÁVEL: [SEU NOME]
-VERSÃO: 1.0
+RESPONSÃVEL: [SEU NOME]
+VERSÃƒO: 1.0
 
 ================================================================================
 FIM DO DOCUMENTO
 ================================================================================
+
+
