@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import joblib
-import matplotlib.pyplot as plt
 
 try:
     model = joblib.load('models/obesity_pipeline.joblib')
@@ -15,12 +13,11 @@ except Exception as e:
 
 st.set_page_config(page_title="Previsor de Obesidade", layout="wide")
 st.title('🏥 Previsor de Obesidade')
-st.write('Sistema para prever nível de obesidade.')
 
-menu = st.radio('Menu:', ['Prever', 'Análise'], horizontal=True)
+menu = st.radio('Menu:', ['Prever', 'Dados'], horizontal=True)
 
 if menu == 'Prever':
-    st.header('📋 Dados do Paciente')
+    st.header('Dados do Paciente')
     
     col1, col2 = st.columns(2)
     
@@ -31,13 +28,13 @@ if menu == 'Prever':
         weight = st.number_input('Peso (kg)', 10.0, 300.0, 70.0)
         family_history = st.selectbox('Histórico familiar?', ['yes', 'no'])
         favc = st.selectbox('Alimentos calóricos?', ['yes', 'no'])
-        fcvc = st.number_input('Vegetais (0-10)', 0, 10, 2)
+        fcvc = st.number_input('Vegetais', 0, 10, 2)
     
     with col2:
         ncp = st.number_input('Refeições/dia', 1, 10, 3)
         caec = st.selectbox('Come entre refeições?', ['no', 'Sometimes', 'Frequently', 'Always'])
         smoke = st.selectbox('Fuma?', ['yes', 'no'])
-        ch2o = st.number_input('Água/dia (litros)', 0, 20, 2)
+        ch2o = st.number_input('Água/dia', 0, 20, 2)
         scc = st.selectbox('Monitora calorias?', ['yes', 'no'])
         faf = st.number_input('Atividade física', 0, 10, 1)
         tue = st.number_input('Tempo dispositivos', 0, 24, 1)
@@ -78,26 +75,9 @@ if menu == 'Prever':
             st.error(f'Erro: {e}')
 
 else:
-    st.header('📊 Análise')
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader('Distribuição')
-        fig1, ax = plt.subplots(figsize=(6,4))
-        df['Obesity'].value_counts().plot(kind='barh', ax=ax, color='steelblue')
-        ax.set_xlabel('Quantidade')
-        st.pyplot(fig1)
-    
-    with col2:
-        st.subheader('BMI por Classe')
-        fig2, ax = plt.subplots(figsize=(6,4))
-        df.boxplot(column='BMI', by='Obesity', ax=ax)
-        plt.suptitle('')
-        st.pyplot(fig2)
-    
-    st.subheader('Amostra')
-    st.dataframe(df.sample(50), use_container_width=True)
+    st.header('Amostra de Dados')
+    st.dataframe(df.sample(100, random_state=42), use_container_width=True)
+    st.write(f'**Total de amostras:** {len(df)}')
             for col in ['Age', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'BMI']:
                 if col in X.columns:
                     X[col] = pd.to_numeric(X[col], errors='coerce')
