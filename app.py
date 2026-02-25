@@ -199,8 +199,7 @@ if menu == "Prever":
         )
         fcvc = st.selectbox(
             "FCVC — (Frequency of consumption of vegetables) Frequencia de consumo de vegetais nas refeicoes. "
-            "Valores (escala 1-3): 1 raramente, 2 as vezes, 3 sempre. "
-            "Nota: no arquivo os valores podem ter decimais (ruido); interpretacao por arredondamento.",
+            "Valores (escala 1-3): 1 raramente, 2 as vezes, 3 sempre.",
             options=[1, 2, 3],
             index=1,
         )
@@ -208,8 +207,7 @@ if menu == "Prever":
     with col2:
         ncp = st.selectbox(
             "NCP — (Number of main meals) Numero de refeicoes principais por dia. "
-            "Valores (escala 1-4): 1 uma refeicao, 2 duas, 3 tres, 4 quatro ou mais. "
-            "Nota: valores com decimais devem ser arredondados.",
+            "Valores (escala 1-4): 1 uma refeicao, 2 duas, 3 tres, 4 quatro ou mais.",
             options=[1, 2, 3, 4],
             index=2,
         )
@@ -224,8 +222,7 @@ if menu == "Prever":
         )
         ch2o = st.selectbox(
             "CH2O — (Daily water consumption) Consumo diario de agua. "
-            "Valores (escala 1-3): 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia. "
-            "Nota: arredonde valores decimais para interpretar a categoria.",
+            "Valores (escala 1-3): 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia.",
             options=[1, 2, 3],
             index=1,
         )
@@ -235,15 +232,13 @@ if menu == "Prever":
         )
         faf = st.selectbox(
             "FAF — (Physical activity frequency) Frequencia semanal de atividade fisica. "
-            "Valores (escala 0-3): 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais. "
-            "Nota: arredonde valores decimais.",
+            "Valores (escala 0-3): 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais.",
             options=[0, 1, 2, 3],
             index=1,
         )
         tue = st.selectbox(
             "TUE — (Time using electronic devices) Tempo diario usando dispositivos eletronicos. "
-            "Valores (escala 0-2): 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia. "
-            "Nota: arredonde valores decimais.",
+            "Valores (escala 0-2): 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia.",
             options=[0, 1, 2],
             index=1,
         )
