@@ -158,34 +158,62 @@ render_hero(
 menu = st.radio("Menu:", ["Prever", "Painel Analitico"], horizontal=True)
 
 if menu == "Prever":
-    st.subheader("Dados do Paciente")
+    st.subheader("Cadastro do Paciente")
     col1, col2 = st.columns(2)
 
+    gender_map = {"Feminino": "Female", "Masculino": "Male"}
+    yn_map = {"Sim": "yes", "Nao": "no"}
+    caec_map = {
+        "Nao": "no",
+        "As vezes": "Sometimes",
+        "Frequentemente": "Frequently",
+        "Sempre": "Always",
+    }
+    calc_map = {
+        "Nao": "no",
+        "As vezes": "Sometimes",
+        "Frequentemente": "Frequently",
+        "Sempre": "Always",
+    }
+    mtrans_map = {
+        "Transporte publico": "Public_Transportation",
+        "A pe": "Walking",
+        "Automovel": "Automobile",
+        "Moto": "Motorbike",
+        "Bicicleta": "Bike",
+    }
+
     with col1:
-        gender = st.selectbox("Genero", ["Female", "Male"])
+        gender_label = st.selectbox("Genero", list(gender_map.keys()))
         age = st.number_input("Idade", min_value=1, max_value=120, value=30)
         height = st.number_input("Altura (m)", min_value=0.5, max_value=2.5, value=1.7)
         weight = st.number_input("Peso (kg)", min_value=10.0, max_value=300.0, value=70.0)
-        family_history = st.selectbox("Historico familiar?", ["yes", "no"])
-        favc = st.selectbox("Alimentos caloricos frequentes?", ["yes", "no"])
+        family_history_label = st.selectbox("Historico familiar de excesso de peso?", list(yn_map.keys()))
+        favc_label = st.selectbox("Consome alimentos caloricos com frequencia?", list(yn_map.keys()))
         fcvc = st.number_input("Consumo de vegetais (FCVC)", min_value=0.0, max_value=10.0, value=2.0)
 
     with col2:
         ncp = st.number_input("Refeicoes por dia (NCP)", min_value=1.0, max_value=10.0, value=3.0)
-        caec = st.selectbox("Come entre refeicoes (CAEC)?", ["no", "Sometimes", "Frequently", "Always"])
-        smoke = st.selectbox("Fuma (SMOKE)?", ["yes", "no"])
+        caec_label = st.selectbox("Come entre refeicoes (CAEC)?", list(caec_map.keys()))
+        smoke_label = st.selectbox("Fuma?", list(yn_map.keys()))
         ch2o = st.number_input("Agua por dia (CH2O)", min_value=0.0, max_value=20.0, value=2.0)
-        scc = st.selectbox("Monitora calorias (SCC)?", ["yes", "no"])
+        scc_label = st.selectbox("Monitora calorias (SCC)?", list(yn_map.keys()))
         faf = st.number_input("Atividade fisica (FAF)", min_value=0.0, max_value=10.0, value=1.0)
         tue = st.number_input("Tempo em dispositivos (TUE)", min_value=0.0, max_value=24.0, value=1.0)
-        calc = st.selectbox("Consumo de alcool (CALC)", ["no", "Sometimes", "Frequently", "Always"])
-        mtrans = st.selectbox(
-            "Meio de transporte (MTRANS)",
-            ["Public_Transportation", "Walking", "Automobile", "Motorbike", "Bike"],
-        )
+        calc_label = st.selectbox("Consumo de alcool (CALC)", list(calc_map.keys()))
+        mtrans_label = st.selectbox("Meio de transporte (MTRANS)", list(mtrans_map.keys()))
 
     if st.button("Prever"):
         try:
+            gender = gender_map[gender_label]
+            family_history = yn_map[family_history_label]
+            favc = yn_map[favc_label]
+            caec = caec_map[caec_label]
+            smoke = yn_map[smoke_label]
+            scc = yn_map[scc_label]
+            calc = calc_map[calc_label]
+            mtrans = mtrans_map[mtrans_label]
+
             bmi = weight / (height ** 2)
             X = pd.DataFrame(
                 [
