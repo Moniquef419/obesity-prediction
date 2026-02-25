@@ -2,64 +2,52 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-import os
 import matplotlib.pyplot as plt
-import seaborn as sns
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'models', 'obesity_pipeline.joblib')
-LE_PATH = os.path.join(os.path.dirname(__file__), 'models', 'label_encoder.joblib')
-DATA_PATH = os.path.join(os.path.dirname(__file__), 'Obesity.csv')
-
-@st.cache_resource
-def load_model():
-    model = joblib.load(MODEL_PATH)
-    le = joblib.load(LE_PATH)
-    return model, le
-
-@st.cache_data
-def load_data():
-    df = pd.read_csv(DATA_PATH)
+try:
+    model = joblib.load('models/obesity_pipeline.joblib')
+    le = joblib.load('models/label_encoder.joblib')
+    df = pd.read_csv('Obesity.csv')
     df['BMI'] = df['Weight'] / (df['Height'] ** 2)
-    return df
-
-model, le = load_model()
-df = load_data()
+except Exception as e:
+    st.error(f"Erro ao carregar arquivos: {e}")
+    st.stop()
 
 st.set_page_config(page_title="Previsor de Obesidade", layout="wide")
-st.title('🏥 Previsor de Obesidade - Hospital')
-st.write('Sistema de apoio à decisão clínica para diagnóstico de obesidade.')
+st.title('🏥 Previsor de Obesidade')
+st.write('Sistema para prever nível de obesidade.')
 
-# Menu de navegação
-menu = st.radio('Selecione:', ['Prever', 'Painel Analítico'], horizontal=True)
+menu = st.radio('Menu:', ['Prever', 'Análise'], horizontal=True)
 
 if menu == 'Prever':
-    st.header('📋 Entrada do Paciente')
+    st.header('📋 Dados do Paciente')
     
     col1, col2 = st.columns(2)
+    
     with col1:
         gender = st.selectbox('Gênero', ['Female', 'Male'])
-        age = st.number_input('Idade', min_value=1, max_value=120, value=30)
-        height = st.number_input('Altura (m)', min_value=0.5, max_value=2.5, value=1.7, format="%.2f")
-        weight = st.number_input('Peso (kg)', min_value=10.0, max_value=300.0, value=70.0, format="%.1f")
-        family_history = st.selectbox('Histórico familiar de excesso de peso?', ['yes', 'no'])
-        favc = st.selectbox('Come alimentos altamente calóricos frequentemente?', ['yes', 'no'])
-        fcvc = st.number_input('Consumo de vegetais (0-10)', min_value=0, max_value=10, value=2)
+        age = st.number_input('Idade', 1, 120, 30)
+        height = st.number_input('Altura (m)', 0.5, 2.5, 1.7)
+        weight = st.number_input('Peso (kg)', 10.0, 300.0, 70.0)
+        family_history = st.selectbox('Histórico familiar?', ['yes', 'no'])
+        favc = st.selectbox('Alimentos calóricos?', ['yes', 'no'])
+        fcvc = st.number_input('Vegetais (0-10)', 0, 10, 2)
     
     with col2:
-        ncp = st.number_input('Refeições principais por dia', min_value=1, max_value=10, value=3)
+        ncp = st.number_input('Refeições/dia', 1, 10, 3)
         caec = st.selectbox('Come entre refeições?', ['no', 'Sometimes', 'Frequently', 'Always'])
         smoke = st.selectbox('Fuma?', ['yes', 'no'])
-        ch2o = st.number_input('Água por dia (litros)', min_value=0, max_value=20, value=2)
+        ch2o = st.number_input('Água/dia (litros)', 0, 20, 2)
         scc = st.selectbox('Monitora calorias?', ['yes', 'no'])
-        faf = st.number_input('Atividade física (horas/semana)', min_value=0, max_value=10, value=1)
-        tue = st.number_input('Tempo com dispositivos (horas/dia)', min_value=0, max_value=24, value=1)
-        calc = st.selectbox('Consumo de álcool?', ['no', 'Sometimes', 'Frequently', 'Always'])
-        mtrans = st.selectbox('Meio de transporte?', ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
-
-    if st.button('🔍 Fazer Previsão', key='predict_btn'):
+        faf = st.number_input('Atividade física', 0, 10, 1)
+        tue = st.number_input('Tempo dispositivos', 0, 24, 1)
+        calc = st.selectbox('Álcool?', ['no', 'Sometimes', 'Frequently', 'Always'])
+        mtrans = st.selectbox('Transporte?', ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
+    
+    if st.button('Prever'):
         try:
             bmi = weight / (height ** 2)
-            data = {
+            X = pd.DataFrame([{
                 'Gender': gender,
                 'Age': age,
                 'family_history': family_history,
@@ -75,15 +63,41 @@ if menu == 'Prever':
                 'CALC': calc,
                 'MTRANS': mtrans,
                 'BMI': bmi,
-            }
-            X = pd.DataFrame([data])
+            }])
             
-            # map binary yes/no to 1/0
             for col in ['family_history', 'FAVC', 'SMOKE', 'SCC']:
-                if col in X.columns:
-                    X[col] = X[col].astype(str).str.strip().str.lower().map({'yes': 1, 'no': 0})
+                X[col] = X[col].map({'yes': 1, 'no': 0})
             
-            # ensure numeric columns
+            for col in ['Age', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'BMI']:
+                X[col] = pd.to_numeric(X[col], errors='coerce')
+            
+            pred = model.predict(X)[0]
+            label = le.inverse_transform([pred])[0]
+            st.success(f'**Resultado: {label}**')
+        except Exception as e:
+            st.error(f'Erro: {e}')
+
+else:
+    st.header('📊 Análise')
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader('Distribuição')
+        fig1, ax = plt.subplots(figsize=(6,4))
+        df['Obesity'].value_counts().plot(kind='barh', ax=ax, color='steelblue')
+        ax.set_xlabel('Quantidade')
+        st.pyplot(fig1)
+    
+    with col2:
+        st.subheader('BMI por Classe')
+        fig2, ax = plt.subplots(figsize=(6,4))
+        df.boxplot(column='BMI', by='Obesity', ax=ax)
+        plt.suptitle('')
+        st.pyplot(fig2)
+    
+    st.subheader('Amostra')
+    st.dataframe(df.sample(50), use_container_width=True)
             for col in ['Age', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'BMI']:
                 if col in X.columns:
                     X[col] = pd.to_numeric(X[col], errors='coerce')
@@ -108,32 +122,5 @@ elif menu == 'Painel Analítico':
     st.header('📊 Análise de Dados')
     
     col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader('Distribuição de Obesidade')
-        fig1, ax1 = plt.subplots(figsize=(6, 4))
-        df['Obesity'].value_counts().plot(kind='barh', ax=ax1, color='steelblue')
-        ax1.set_xlabel('Quantidade')
-        st.pyplot(fig1, use_container_width=True)
-    
-    with col2:
-        st.subheader('Distribuição de BMI por Classe')
-        fig2, ax2 = plt.subplots(figsize=(6, 4))
-        df.boxplot(column='BMI', by='Obesity', ax=ax2)
-        plt.suptitle('')
-        plt.xticks(rotation=45, ha='right')
-        st.pyplot(fig2, use_container_width=True)
-    
-    st.subheader('Idade vs BMI')
-    fig3, ax3 = plt.subplots(figsize=(10, 5))
-    for obesity_class in df['Obesity'].unique():
-        mask = df['Obesity'] == obesity_class
-        ax3.scatter(df[mask]['Age'], df[mask]['BMI'], label=obesity_class, alpha=0.6)
-    ax3.set_xlabel('Idade')
-    ax3.set_ylabel('BMI')
-    ax3.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    st.pyplot(fig3, use_container_width=True)
-    
-    st.subheader('Amostra dos Dados')
-    st.dataframe(df.sample(100, random_state=42).reset_index(drop=True), use_container_width=True)
+
 
