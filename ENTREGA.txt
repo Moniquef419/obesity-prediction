@@ -1,281 +1,176 @@
-﻿================================================================================
-                 TECH CHALLENGE - PREVISÃƒO DE OBESIDADE
-                          DOCUMENTO DE ENTREGA
-================================================================================
+===============================================================================
+TECH CHALLENGE - PREVISAO DE OBESIDADE
+DOCUMENTO DE ENTREGA
+===============================================================================
 
-DATA: Fevereiro 2026
-PROJETO: Modelo Preditivo de Obesidade para Hospital
-STATUS: CONCLUÃDO âœ“
+Data: Fevereiro/2026
+Projeto: Modelo Preditivo de Obesidade para Hospital
+Status: Concluido
 
-================================================================================
+===============================================================================
 1. RESUMO EXECUTIVO
-================================================================================
+===============================================================================
 
-Desenvolvemos um modelo de Machine Learning com acuracia de 96% para auxiliar
-mÃ©dicos e mÃ©dicas a prever o nÃ­vel de obesidade de pacientes a partir de
-caracterÃ­sticas demogrÃ¡ficas, comportamentais e mÃ©dicas.
+Foi desenvolvido um modelo de Machine Learning para prever o nivel de obesidade
+de pacientes com base em dados demograficos, habitos e historico familiar.
 
-REQUISITOS ATENDIDOS:
-âœ“ Pipeline de ML com feature engineering e treinamento
-âœ“ Acuracia: 96% (meta: >75%)
-âœ“ App preditivo em Streamlit
-âœ“ Painel analÃ­tico com insights
-âœ“ Pronto para deploy
+Resultado principal:
+- Acuracia de teste: 96%
+- Meta minima exigida: > 75%
 
-================================================================================
-2. MÃ‰TRICAS DE DESEMPENHO
-================================================================================
+Requisitos atendidos:
+- Pipeline completo de ML (feature engineering + treino)
+- Modelo com desempenho acima do minimo
+- Aplicacao preditiva em Streamlit
+- Painel analitico com insights para equipe medica
+- Projeto publicado em repositorio GitHub e deploy no Streamlit Cloud
 
-ACCURACY: 96%
-Macro Average F1-Score: 0.96
-Weighted Average F1-Score: 0.96
+===============================================================================
+2. METRICAS DE DESEMPENHO
+===============================================================================
 
-DISTRIBUIÃ‡ÃƒO DE CLASSES PREDITAS:
-- Insufficient_Weight: PrecisÃ£o 1.00, Recall 0.98, F1 0.99
-- Normal_Weight: Precisao 0.86, Recall 0.95, F1 0.90
-- Overweight_Level_I: PrecisÃ£o 0.99, Recall 1.00, F1 0.99
-- Overweight_Level_II: Precisao 0.97, Recall 0.98, F1 0.98
-- Obesity_Type_I: PrecisÃ£o 1.00, Recall 0.98, F1 0.99
-- Obesity_Type_II: Precisao 0.94, Recall 0.88, F1 0.91
-- Obesity_Type_III: PrecisÃ£o 1.00, Recall 0.98, F1 0.99
+Accuracy: 0.96
+Macro Avg F1: 0.96
+Weighted Avg F1: 0.96
 
-Dataset: 2.111 amostras, 16 features, 7 classes balanceadas
+Classification report (teste):
+- Classe 0 (Insufficient_Weight): Precision 1.00 | Recall 0.98 | F1 0.99
+- Classe 1 (Normal_Weight): Precision 0.86 | Recall 0.95 | F1 0.90
+- Classe 2 (Overweight_Level_I): Precision 0.99 | Recall 0.99 | F1 0.99
+- Classe 3 (Overweight_Level_II): Precision 0.97 | Recall 0.98 | F1 0.98
+- Classe 4 (Obesity_Type_I): Precision 1.00 | Recall 0.98 | F1 0.99
+- Classe 5 (Obesity_Type_II): Precision 0.94 | Recall 0.88 | F1 0.91
+- Classe 6 (Obesity_Type_III): Precision 1.00 | Recall 0.98 | F1 0.99
 
-================================================================================
-3. ARQUITETURA DA SOLUÃ‡ÃƒO
-================================================================================
+Base:
+- 2.111 registros (2.112 linhas com cabecalho)
+- 7 classes de saida
 
-MODELO: Random Forest (100-200 estimadores)
-PREPROCESSAMENTO: StandardScaler (numÃ©ricos) + OneHotEncoder (categÃ³ricos)
-PIPELINE: sklearn.pipeline.Pipeline com ColumnTransformer
-SERIALIZAÃ‡ÃƒO: joblib
+===============================================================================
+3. ARQUITETURA DA SOLUCAO
+===============================================================================
 
-ARQUIVOS PRINCIPAIS:
-- app.py                        App Streamlit (prediÃ§Ã£o + painel)
-- src/train.py                  Script de treinamento
-- src/data_prep.py              Preprocessamento e feature engineering
-- src/eda.py                    ExploraÃ§Ã£o de dados
-- models/obesity_pipeline.joblib Pipeline treinado (7.3MB)
-- models/label_encoder.joblib   Codificador de classes
-- Obesity.csv                   Dataset original (2.111 linhas)
-- requirements.txt              DependÃªncias Python
-- README.md                     DocumentaÃ§Ã£o tÃ©cnica
+Modelo:
+- RandomForestClassifier (com GridSearchCV)
 
-================================================================================
-4. INSTRUÃ‡Ã•ES DE DEPLOY - STREAMLIT CLOUD
-================================================================================
+Preprocessamento:
+- StandardScaler para variaveis numericas
+- OneHotEncoder para categoricas
+- Pipeline com ColumnTransformer
 
-PASSO 1: Preparar RepositÃ³rio GitHub
------------------------------------
-1. Crie uma conta em https://github.com (se nÃ£o tiver)
-2. Crie um novo repositÃ³rio pÃºblico:
-   - Nome: "obesity-prediction" (ou similar)
-   - Visibilidade: Public
-3. Clone o repositÃ³rio localmente ou use Git:
-   
-   git init
-   git add .
-   git commit -m "Initial commit: Obesity prediction model"
-   git remote add origin https://github.com/[seu-usuario]/obesity-prediction.git
-   git push -u origin main
+Feature engineering:
+- Calculo de BMI a partir de Height e Weight
+- Conversao binaria de campos yes/no
+- Arredondamento e normalizacao de escalas:
+  - FCVC (1-3)
+  - NCP (1-4)
+  - CH2O (1-3)
+  - FAF (0-3)
+  - TUE (0-2)
 
-PASSO 2: Deploy no Streamlit Cloud
-------------------------------------
-1. Acesse https://streamlit.io/cloud
-2. Clique em "New app"
-3. FaÃ§a login com sua conta GitHub
-4. Preencha:
-   - Repository: [seu-usuario]/obesity-prediction
-   - Branch: main
-   - Main file path: app.py
-5. Clique "Deploy"
-6. Aguarde ~2-3 minutos (primeira execuÃ§Ã£o Ã© mais lenta)
+Artefatos:
+- models/obesity_pipeline.joblib
+- models/label_encoder.joblib
 
-PASSO 3: Obter o Link da AplicaÃ§Ã£o
------------------------------------
-ApÃ³s deploy bem-sucedido, o Streamlit Cloud fornecerÃ¡ uma URL do tipo:
-https://[seu-projeto]-[codigo-aleatorio].streamlit.app
+===============================================================================
+4. ESTRUTURA DE ARQUIVOS PRINCIPAIS
+===============================================================================
 
-Salve este link para o documento de entrega.
+- app.py
+- src/train.py
+- src/data_prep.py
+- src/eda.py
+- Obesity.csv
+- requirements.txt
+- README.md
+- ENTREGA.txt
 
-================================================================================
-5. INSTRUÃ‡Ã•ES DE USO LOCAL
-================================================================================
+===============================================================================
+5. INSTRUCOES DE EXECUCAO LOCAL
+===============================================================================
 
-REQUISITOS:
+Requisitos:
 - Python 3.8+
-- pip ou conda
+- pip
 
-INSTALAÃ‡ÃƒO:
-1. Clone ou extraia os arquivos do projeto
-2. Abra o PowerShell/Terminal na pasta do projeto
-3. Instale dependÃªncias:
-   
+Passos:
+1. Instalar dependencias:
    pip install -r requirements.txt
 
-4. Treinar modelo (opcional, jÃ¡ incluÃ­do):
-   
+2. (Opcional) Re-treinar modelo:
    python src/train.py
 
-5. Rodar a aplicaÃ§Ã£o:
-   
+3. Rodar aplicacao:
    streamlit run app.py
 
-6. Abra http://localhost:8501 no navegador
+4. Abrir no navegador:
+   http://localhost:8501
 
-FUNCIONALIDADES DA APP:
+===============================================================================
+6. FUNCIONALIDADES DA APLICACAO
+===============================================================================
 
-ABA 1 - PREVER:
-- Entrada de dados do paciente (15 campos)
-- PrediÃ§Ã£o em tempo real
-- Probabilidades por classe
-- Interface intuitiva para mÃ©dicos
+Aba 1 - Prever:
+- Formulario em portugues
+- Conversao interna para codigos do modelo
+- Classe prevista
+- Top 3 probabilidades
 
-ABA 2 - PAINEL ANALÃTICO:
-- DistribuiÃ§Ã£o das classes de obesidade
-- Boxplot de BMI por categoria
-- Scatter plot Idade vs BMI
-- Amostra dos dados para exploraÃ§Ã£o
+Aba 2 - Painel Analitico:
+- Filtros por genero, idade e classe
+- KPIs (BMI medio, excesso de peso, risco alto)
+- Graficos de distribuicao e comparativos
+- Amostra dos dados filtrados
 
-================================================================================
-6. ESTRUTURA DE FEATURES
-================================================================================
+===============================================================================
+7. FEATURES E TARGET
+===============================================================================
 
-ENTRADA DO PACIENTE (15 features):
-1. Gender: GÃªnero (Female/Male)
-2. Age: Idade (anos)
-3. Height: Altura (metros)
-4. Weight: Peso (kg)
-5. family_history: HistÃ³rico familiar (yes/no)
-6. FAVC: Come alimentos calÃ³ricos frequentemente? (yes/no)
-7. FCVC: Consumo de vegetais (0-10)
-8. NCP: RefeiÃ§Ãµes principais por dia (1-10)
-9. CAEC: Come entre refeiÃ§Ãµes (no/Sometimes/Frequently/Always)
-10. SMOKE: Fuma? (yes/no)
-11. CH2O: Ãgua por dia em litros (0-20)
-12. SCC: Monitora calorias? (yes/no)
-13. FAF: FrequÃªncia de atividade fÃ­sica (0-10 horas/semana)
-14. TUE: Tempo de dispositivos tecnolÃ³gicos (0-24 horas/dia)
-15. CALC: Consumo de Ã¡lcool (no/Sometimes/Frequently/Always)
-16. MTRANS: Meio de transporte (Public_Transportation/Walking/Automobile/Motorbike/Bike)
+Entradas do formulario:
+- Gender, Age, Height, Weight
+- family_history, FAVC, FCVC, NCP, CAEC, SMOKE
+- CH2O, SCC, FAF, TUE, CALC, MTRANS
 
-SAÃDA:
-- Classe predita: Insufficient_Weight | Normal_Weight | Overweight_Level_I |
-                   Overweight_Level_II | Obesity_Type_I | Obesity_Type_II |
-                   Obesity_Type_III
-- Probabilidades para cada classe
+Observacao de modelagem:
+- Height e Weight sao usados para calcular BMI
+- O modelo final usa BMI no lugar de Height e Weight
 
-================================================================================
-7. TECNOLOGIAS UTILIZADAS
-================================================================================
+Saida:
+- Obesity (7 classes)
 
-Python 3.13
-pandas 2.x          â€” ManipulaÃ§Ã£o de dados
-numpy               â€” ComputaÃ§Ã£o numÃ©rica
-scikit-learn        â€” Machine Learning (RFC, ColumnTransformer, Pipeline)
-streamlit           â€” Interface web
-matplotlib          â€” VisualizaÃ§Ãµes estÃ¡ticas
-seaborn             â€” VisualizaÃ§Ãµes de dados
-joblib              â€” SerializaÃ§Ã£o do modelo
+Classes:
+- Insufficient_Weight
+- Normal_Weight
+- Overweight_Level_I
+- Overweight_Level_II
+- Obesity_Type_I
+- Obesity_Type_II
+- Obesity_Type_III
 
-================================================================================
-8. LINKS PARA ENTREGA
-================================================================================
+===============================================================================
+8. LINKS DA ENTREGA
+===============================================================================
 
-[PREENCHIMENTO OBRIGATÃ“RIO]
+Aplicacao (Streamlit Cloud):
+https://obesity-prediction-yf9mmuflqmawja7quzv29x.streamlit.app/
 
-Link da AplicaÃ§Ã£o Deployada (Streamlit Cloud):
-https://obesity-prediction-88xpnqobj52yf24o45r2la.streamlit.app
-
-Link do RepositÃ³rio GitHub:
+Repositorio GitHub:
 https://github.com/Moniquef419/obesity-prediction
 
-Link do Painel AnalÃ­tico:
-Incluso dentro da aplicaÃ§Ã£o Streamlit (aba "AnÃ¡lise")
+Painel analitico:
+Incluido na propria aplicacao (aba "Painel Analitico")
 
-ObservaÃ§Ã£o: A aplicaÃ§Ã£o tem duas abas:
-1. Prever: Para fazer prediÃ§Ãµes em novos pacientes
-2. AnÃ¡lise: Dashboards e insights dos dados
+===============================================================================
+9. CHECKLIST FINAL
+===============================================================================
 
-================================================================================
-9. VALIDAÃ‡ÃƒO E TESTES
-================================================================================
+[X] Pipeline de ML completo
+[X] Acuracia > 75% (resultado: 96%)
+[X] Deploy em Streamlit
+[X] Painel analitico com insights
+[X] Repositorio GitHub com codigo e artefatos
+[X] Documentacao (README + ENTREGA)
 
-TESTES REALIZADOS:
-âœ“ ExploraÃ§Ã£o de dados (EDA)
-âœ“ Preprocessamento e tratamento de valores ausentes (nenhum encontrado)
-âœ“ Feature engineering (cÃ¡lculo de BMI, encoding binÃ¡rio)
-âœ“ Treinamento e validaÃ§Ã£o cruzada (GridSearchCV, CV=3)
-âœ“ Avaliacao em conjunto de teste (96% accuracy)
-âœ“ Teste da interface Streamlit (entrada de dados, prediÃ§Ã£o, grÃ¡ficos)
-âœ“ Reprodutibilidade do modelo (seed = 42)
-
-CASOS DE USO VALIDADOS:
-- PrediÃ§Ã£o individual de paciente âœ“
-- VisualizaÃ§Ã£o de distribuiÃ§Ãµes de dados âœ“
-- AnÃ¡lise exploratÃ³ria âœ“
-- Portabilidade entre ambientes âœ“
-
-================================================================================
-10. NOTAS E OBSERVAÃ‡Ã•ES
-================================================================================
-
-1. O modelo foi treinado em 80% dos dados (1.689 amostras)
-2. Validado em 20% dos dados (423 amostras)
-3. Acuracia de teste: 96% (criterios de sucesso: >75%)
-4. Todas as classes estÃ£o balanceadas no dataset
-5. O pipeline inclui preprocessamento automÃ¡tico
-6. Nenhum dado faltante foi encontrado no dataset
-7. A aplicaÃ§Ã£o roda em Python 3.8+ (testada em 3.13)
-8. Consumo de memÃ³ria: ~200MB durante execuÃ§Ã£o
-9. Deploy no Streamlit Cloud Ã© gratuito para repositÃ³rios pÃºblicos
-
-================================================================================
-11. SUPORTE E CONTATO
-================================================================================
-
-Para dÃºvidas ou issues:
-1. Verifique o README.md no repositÃ³rio
-2. Abra uma issue no GitHub
-3. Verifique os logs da aplicaÃ§Ã£o Streamlit Cloud
-
-================================================================================
-12. CHECKLIST DE ENTREGA
-================================================================================
-
-[X] Pipeline de ML com feature engineering
-[X] Acuracia > 75% (96% alcancado)
-[X] App preditivo em Streamlit funcional
-[X] Painel analÃ­tico com insights
-[X] RepositÃ³rio GitHub preparado
-[X] README.md com instruÃ§Ãµes
-[X] requirements.txt com dependÃªncias
-[X] Modelo serializado (.joblib)
-[X] Dataset original incluÃ­do
-[X] DocumentaÃ§Ã£o de deploy
-
-================================================================================
-13. PRÃ“XIMOS PASSOS (OPCIONAL)
-================================================================================
-
-- Melhorias futuras:
-  1. IntegraÃ§Ã£o com banco de dados clÃ­nico
-  2. HistÃ³rico de prediÃ§Ãµes por paciente
-  3. Export de relatÃ³rios em PDF
-  4. API REST com FastAPI
-  5. Monitoramento de performance em produÃ§Ã£o
-  6. Retrainamento periÃ³dico automÃ¡tico
-  7. Testes unitÃ¡rios com pytest
-  8. CI/CD com GitHub Actions
-
-================================================================================
-
-DOCUMENTO PREENCHIDO EM: [DATA DE PREENCHIMENTO]
-RESPONSÃVEL: [SEU NOME]
-VERSÃƒO: 1.0
-
-================================================================================
+===============================================================================
 FIM DO DOCUMENTO
-================================================================================
-
-
+===============================================================================
