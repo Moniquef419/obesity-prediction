@@ -296,7 +296,7 @@ if menu == "Prever":
 
 else:
     st.subheader("Painel Analitico")
-    st.caption("Visao para apoiar decisao clinica com foco em risco e perfil de pacientes.")
+    st.caption("Painel simplificado para leitura clinica rapida.")
 
     with st.expander("Filtros", expanded=True):
         c1, c2, c3 = st.columns(3)
@@ -321,6 +321,16 @@ else:
         st.warning("Sem dados para os filtros selecionados.")
         st.stop()
 
+    class_pt = {
+        "Insufficient_Weight": "Abaixo do peso",
+        "Normal_Weight": "Peso normal",
+        "Overweight_Level_I": "Sobrepeso I",
+        "Overweight_Level_II": "Sobrepeso II",
+        "Obesity_Type_I": "Obesidade I",
+        "Obesity_Type_II": "Obesidade II",
+        "Obesity_Type_III": "Obesidade III",
+    }
+
     risk_classes = [
         "Overweight_Level_II",
         "Obesity_Type_I",
@@ -338,42 +348,69 @@ else:
     m3.metric("Excesso de peso", f"{excess_weight_rate:.1f}%")
     m4.metric("Risco clinico alto", f"{severe_rate:.1f}%")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown('<div class="card"><strong>Distribuicao das Classes (%)</strong></div>', unsafe_allow_html=True)
-        class_pct = (df_filtered["Obesity"].value_counts(normalize=True) * 100).sort_values(ascending=False)
-        st.bar_chart(class_pct)
-    with col2:
-        st.markdown('<div class="card"><strong>BMI medio por Classe</strong></div>', unsafe_allow_html=True)
-        bmi_by_class = df_filtered.groupby("Obesity")["BMI"].mean().sort_values(ascending=False)
-        st.bar_chart(bmi_by_class)
+    age_bins = pd.cut(
+        df_filtered["Age"],
+        bins=[0, 18, 25, 35, 45, 60, 120],
+        labels=["<=18", "19-25", "26-35", "36-45", "46-60", "60+"],
+    )
 
-    col3, col4 = st.columns(2)
-    with col3:
+    tab1, tab2, tab3 = st.tabs(["Visao Geral", "Risco", "Habitos"])
+
+    with tab1:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown('<div class="card"><strong>Distribuicao das Classes (%)</strong></div>', unsafe_allow_html=True)
+            class_pct = (df_filtered["Obesity"].value_counts(normalize=True) * 100).sort_values(ascending=False)
+            class_pct.index = [class_pt.get(c, c) for c in class_pct.index]
+            st.bar_chart(class_pct)
+        with col2:
+            st.markdown('<div class="card"><strong>BMI medio por Classe</strong></div>', unsafe_allow_html=True)
+            bmi_by_class = df_filtered.groupby("Obesity")["BMI"].mean().sort_values(ascending=False)
+            bmi_by_class.index = [class_pt.get(c, c) for c in bmi_by_class.index]
+            st.bar_chart(bmi_by_class)
+
         st.markdown('<div class="card"><strong>BMI medio por Faixa de Idade</strong></div>', unsafe_allow_html=True)
-        age_bins = pd.cut(
-            df_filtered["Age"],
-            bins=[0, 18, 25, 35, 45, 60, 120],
-            labels=["<=18", "19-25", "26-35", "36-45", "46-60", "60+"],
-        )
         bmi_age = df_filtered.assign(age_group=age_bins).groupby("age_group", observed=False)["BMI"].mean()
         st.line_chart(bmi_age)
-    with col4:
-        st.markdown('<div class="card"><strong>Distribuicao por Genero e Classe</strong></div>', unsafe_allow_html=True)
-        gender_class = pd.crosstab(df_filtered["Gender"], df_filtered["Obesity"])
-        st.bar_chart(gender_class)
 
-    st.markdown('<div class="card"><strong>Indicadores de Habitos (% yes)</strong></div>', unsafe_allow_html=True)
-    habits = ["family_history", "FAVC", "SMOKE", "SCC"]
-    habits_yes = pd.Series(
-        {
-            col: (df_filtered[col].astype(str).str.lower() == "yes").mean() * 100
-            for col in habits
-            if col in df_filtered.columns
-        }
-    ).sort_values(ascending=False)
-    st.bar_chart(habits_yes)
+    with tab2:
+        st.markdown('<div class="card"><strong>Risco clinico alto por Genero (%)</strong></div>', unsafe_allow_html=True)
+        risk_by_gender = (
+            df_filtered.assign(high_risk=df_filtered["Obesity"].isin(risk_classes))
+            .groupby("Gender")["high_risk"]
+            .mean()
+            .mul(100)
+            .rename(index={"Female": "Feminino", "Male": "Masculino"})
+        )
+        st.bar_chart(risk_by_gender)
 
-    st.markdown('<div class="card"><strong>Amostra dos Dados Filtrados</strong></div>', unsafe_allow_html=True)
-    st.dataframe(df_filtered.sample(min(100, len(df_filtered)), random_state=42), use_container_width=True)
+        st.markdown('<div class="card"><strong>Risco clinico alto por Faixa de Idade (%)</strong></div>', unsafe_allow_html=True)
+        risk_by_age = (
+            df_filtered.assign(age_group=age_bins, high_risk=df_filtered["Obesity"].isin(risk_classes))
+            .groupby("age_group", observed=False)["high_risk"]
+            .mean()
+            .mul(100)
+        )
+        st.bar_chart(risk_by_age)
+
+    with tab3:
+        st.markdown('<div class="card"><strong>Indicadores de Habitos (% Sim)</strong></div>', unsafe_allow_html=True)
+        habits = ["family_history", "FAVC", "SMOKE", "SCC"]
+        habits_yes = pd.Series(
+            {
+                col: (df_filtered[col].astype(str).str.lower() == "yes").mean() * 100
+                for col in habits
+                if col in df_filtered.columns
+            }
+        ).sort_values(ascending=False)
+        habits_yes = habits_yes.rename(index={
+            "family_history": "Historico familiar",
+            "FAVC": "Alimentos caloricos frequentes",
+            "SMOKE": "Fumante",
+            "SCC": "Monitora calorias",
+        })
+        st.bar_chart(habits_yes)
+
+        st.markdown('<div class="card"><strong>Amostra dos Dados Filtrados</strong></div>', unsafe_allow_html=True)
+        st.dataframe(df_filtered.sample(min(80, len(df_filtered)), random_state=42), use_container_width=True)
 
