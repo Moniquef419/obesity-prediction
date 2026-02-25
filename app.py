@@ -160,79 +160,105 @@ menu = st.radio("Menu:", ["Prever", "Painel Analitico"], horizontal=True)
 if menu == "Prever":
     st.subheader("Cadastro do Paciente")
     col1, col2 = st.columns(2)
-
-    gender_map = {"Feminino": "Female", "Masculino": "Male"}
-    yn_map = {"Sim": "yes", "Nao": "no"}
-    caec_map = {
-        "Nao": "no",
-        "As vezes": "Sometimes",
-        "Frequentemente": "Frequently",
-        "Sempre": "Always",
-    }
-    calc_map = {
-        "Nao": "no",
-        "As vezes": "Sometimes",
-        "Frequentemente": "Frequently",
-        "Sempre": "Always",
-    }
-    mtrans_map = {
-        "Transporte publico": "Public_Transportation",
-        "A pe": "Walking",
-        "Automovel": "Automobile",
-        "Moto": "Motorbike",
-        "Bicicleta": "Bike",
-    }
+    st.caption(
+        "Os campos abaixo seguem o dicionario oficial: codigo, descricao e valores validos."
+    )
 
     with col1:
-        gender_label = st.selectbox("Genero", list(gender_map.keys()))
-        age = st.number_input("Idade (14-61 anos)", min_value=14, max_value=61, value=30)
-        height = st.number_input("Altura (m) - faixa tipica 1.45-1.98", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
-        weight = st.number_input("Peso (kg) - faixa tipica 39-173", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
-        family_history_label = st.selectbox("Historico familiar de excesso de peso?", list(yn_map.keys()))
-        favc_label = st.selectbox("Consome alimentos caloricos com frequencia?", list(yn_map.keys()))
+        gender = st.selectbox(
+            "Gender — (Genero) Sexo biologico. Valores: Female, Male.",
+            ["Female", "Male"],
+        )
+        age = st.number_input(
+            "Age — (Idade) Idade em anos. Valores: numerico continuo (min 14, max 61).",
+            min_value=14,
+            max_value=61,
+            value=30,
+        )
+        height = st.number_input(
+            "Height — (Altura) Altura em metros. Valores: numerico continuo (ex.: 1.45-1.98 m).",
+            min_value=1.45,
+            max_value=1.98,
+            value=1.70,
+            step=0.01,
+        )
+        weight = st.number_input(
+            "Weight — (Peso) Peso em quilogramas. Valores: numerico continuo (ex.: 39-173 kg).",
+            min_value=39.0,
+            max_value=173.0,
+            value=70.0,
+            step=0.1,
+        )
+        family_history = st.selectbox(
+            "family_history — (Family history of overweight) Historico familiar de excesso de peso. Valores: yes, no.",
+            ["yes", "no"],
+        )
+        favc = st.selectbox(
+            "FAVC — (Frequent consumption of high-caloric food) Consumo frequente de alimentos muito caloricos. Valores: yes, no.",
+            ["yes", "no"],
+        )
         fcvc = st.selectbox(
-            "FCVC - Consumo de vegetais (escala 1-3): 1 raramente, 2 as vezes, 3 sempre",
+            "FCVC — (Frequency of consumption of vegetables) Frequencia de consumo de vegetais nas refeicoes. "
+            "Valores (escala 1-3): 1 raramente, 2 as vezes, 3 sempre. "
+            "Nota: no arquivo os valores podem ter decimais (ruido); interpretacao por arredondamento.",
             options=[1, 2, 3],
             index=1,
         )
 
     with col2:
         ncp = st.selectbox(
-            "NCP - Refeicoes principais por dia (escala 1-4): 1 uma, 2 duas, 3 tres, 4 quatro ou mais",
+            "NCP — (Number of main meals) Numero de refeicoes principais por dia. "
+            "Valores (escala 1-4): 1 uma refeicao, 2 duas, 3 tres, 4 quatro ou mais. "
+            "Nota: valores com decimais devem ser arredondados.",
             options=[1, 2, 3, 4],
             index=2,
         )
-        caec_label = st.selectbox("Come entre refeicoes (CAEC)?", list(caec_map.keys()))
-        smoke_label = st.selectbox("Fuma?", list(yn_map.keys()))
+        caec = st.selectbox(
+            "CAEC — (Consumption of food between meals) Consumo de lanches/comes entre as refeicoes. "
+            "Valores: no, Sometimes, Frequently, Always.",
+            ["no", "Sometimes", "Frequently", "Always"],
+        )
+        smoke = st.selectbox(
+            "SMOKE — (Smoking) Habito de fumar. Valores: yes, no.",
+            ["yes", "no"],
+        )
         ch2o = st.selectbox(
-            "CH2O - Consumo diario de agua (escala 1-3): 1 <1L/dia, 2 1-2L/dia, 3 >2L/dia",
+            "CH2O — (Daily water consumption) Consumo diario de agua. "
+            "Valores (escala 1-3): 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia. "
+            "Nota: arredonde valores decimais para interpretar a categoria.",
             options=[1, 2, 3],
             index=1,
         )
-        scc_label = st.selectbox("Monitora calorias (SCC)?", list(yn_map.keys()))
+        scc = st.selectbox(
+            "SCC — (Calories consumption monitoring) Monitora a ingestao calorica diaria. Valores: yes, no.",
+            ["yes", "no"],
+        )
         faf = st.selectbox(
-            "FAF - Frequencia semanal de atividade fisica (escala 0-3): 0 nenhuma, 1 1-2x/sem, 2 3-4x/sem, 3 5x/sem ou mais",
+            "FAF — (Physical activity frequency) Frequencia semanal de atividade fisica. "
+            "Valores (escala 0-3): 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais. "
+            "Nota: arredonde valores decimais.",
             options=[0, 1, 2, 3],
             index=1,
         )
         tue = st.selectbox(
-            "TUE - Tempo diario em dispositivos (escala 0-2): 0 0-2h/dia, 1 3-5h/dia, 2 >5h/dia",
+            "TUE — (Time using electronic devices) Tempo diario usando dispositivos eletronicos. "
+            "Valores (escala 0-2): 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia. "
+            "Nota: arredonde valores decimais.",
             options=[0, 1, 2],
             index=1,
         )
-        calc_label = st.selectbox("Consumo de alcool (CALC)", list(calc_map.keys()))
-        mtrans_label = st.selectbox("Meio de transporte (MTRANS)", list(mtrans_map.keys()))
+        calc = st.selectbox(
+            "CALC — (Alcohol consumption) Consumo de bebida alcoolica. Valores: no, Sometimes, Frequently, Always.",
+            ["no", "Sometimes", "Frequently", "Always"],
+        )
+        mtrans = st.selectbox(
+            "MTRANS — (Transportation used / Mode of transport) Meio de transporte habitual. "
+            "Valores: Automobile, Motorbike, Bike, Public_Transportation, Walking.",
+            ["Automobile", "Motorbike", "Bike", "Public_Transportation", "Walking"],
+        )
 
     if st.button("Prever"):
         try:
-            gender = gender_map[gender_label]
-            family_history = yn_map[family_history_label]
-            favc = yn_map[favc_label]
-            caec = caec_map[caec_label]
-            smoke = yn_map[smoke_label]
-            scc = yn_map[scc_label]
-            calc = calc_map[calc_label]
-            mtrans = mtrans_map[mtrans_label]
             fcvc = float(np.clip(np.rint(fcvc), 1, 3))
             ncp = float(np.clip(np.rint(ncp), 1, 4))
             ch2o = float(np.clip(np.rint(ch2o), 1, 3))
