@@ -1,4 +1,4 @@
-﻿# Previsor de Obesidade â€” Hospital
+﻿# Previsor de Obesidade para Hospital
 
 Modelo preditivo de Machine Learning para auxiliar médicoss a diagnosticar níveis de obesidade em pacientes.
 
