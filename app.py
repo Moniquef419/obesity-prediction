@@ -1,19 +1,40 @@
 import streamlit as st
 import pandas as pd
 import joblib
-
-try:
-    model = joblib.load('models/obesity_pipeline.joblib')
-    le = joblib.load('models/label_encoder.joblib')
-    df = pd.read_csv('Obesity.csv')
-    df['BMI'] = df['Weight'] / (df['Height'] ** 2)
-except Exception as e:
-    st.error(f"Erro ao carregar arquivos: {e}")
-    st.stop()
+import os
 
 st.set_page_config(page_title="Previsor de Obesidade", layout="wide")
 st.title('🏥 Previsor de Obesidade')
 
+# Debug: show current directory
+st.write(f"**Current dir:** {os.getcwd()}")
+st.write(f"**Files:** {os.listdir('.')[:10]}")  # lista primeiros 10 arquivos
+
+# Try to load model
+try:
+    model = joblib.load('models/obesity_pipeline.joblib')
+    le = joblib.load('models/label_encoder.joblib')
+    st.write("✅ Modelo carregado com sucesso")
+except FileNotFoundError as e:
+    st.error(f"❌ Arquivo não encontrado: {e}")
+    st.stop()
+except Exception as e:
+    st.error(f"❌ Erro ao carregar modelo: {e}")
+    st.stop()
+
+# Try to load data
+try:
+    df = pd.read_csv('Obesity.csv')
+    df['BMI'] = df['Weight'] / (df['Height'] ** 2)
+    st.write("✅ Dados carregados com sucesso")
+except FileNotFoundError as e:
+    st.error(f"❌ Arquivo CSV não encontrado: {e}")
+    st.stop()
+except Exception as e:
+    st.error(f"❌ Erro ao carregar CSV: {e}")
+    st.stop()
+
+# Now the app
 menu = st.radio('Menu:', ['Prever', 'Dados'], horizontal=True)
 
 if menu == 'Prever':
@@ -42,42 +63,38 @@ if menu == 'Prever':
         mtrans = st.selectbox('Transporte?', ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
     
     if st.button('Prever'):
-        try:
-            bmi = weight / (height ** 2)
-            X = pd.DataFrame([{
-                'Gender': gender,
-                'Age': age,
-                'family_history': family_history,
-                'FAVC': favc,
-                'FCVC': fcvc,
-                'NCP': ncp,
-                'CAEC': caec,
-                'SMOKE': smoke,
-                'CH2O': ch2o,
-                'SCC': scc,
-                'FAF': faf,
-                'TUE': tue,
-                'CALC': calc,
-                'MTRANS': mtrans,
-                'BMI': bmi,
-            }])
-            
-            for col in ['family_history', 'FAVC', 'SMOKE', 'SCC']:
-                X[col] = X[col].map({'yes': 1, 'no': 0})
-            
-            for col in ['Age', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'BMI']:
-                X[col] = pd.to_numeric(X[col], errors='coerce')
-            
-            pred = model.predict(X)[0]
-            label = le.inverse_transform([pred])[0]
-            st.success(f'**Resultado: {label}**')
-        except Exception as e:
-            st.error(f'Erro: {e}')
+        bmi = weight / (height ** 2)
+        X = pd.DataFrame([{
+            'Gender': gender,
+            'Age': age,
+            'family_history': family_history,
+            'FAVC': favc,
+            'FCVC': fcvc,
+            'NCP': ncp,
+            'CAEC': caec,
+            'SMOKE': smoke,
+            'CH2O': ch2o,
+            'SCC': scc,
+            'FAF': faf,
+            'TUE': tue,
+            'CALC': calc,
+            'MTRANS': mtrans,
+            'BMI': bmi,
+        }])
+        
+        for col in ['family_history', 'FAVC', 'SMOKE', 'SCC']:
+            X[col] = X[col].map({'yes': 1, 'no': 0})
+        
+        for col in ['Age', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'BMI']:
+            X[col] = pd.to_numeric(X[col], errors='coerce')
+        
+        pred = model.predict(X)[0]
+        label = le.inverse_transform([pred])[0]
+        st.success(f'**Resultado: {label}**')
 
 else:
     st.header('Amostra de Dados')
-    st.dataframe(df.sample(100, random_state=42), use_container_width=True)
-    st.write(f'**Total de amostras:** {len(df)}')
+    st.dataframe(df.sample(min(100, len(df)), random_state=42), use_container_width=True)
             for col in ['Age', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'BMI']:
                 if col in X.columns:
                     X[col] = pd.to_numeric(X[col], errors='coerce')
