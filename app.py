@@ -2,7 +2,7 @@
 import pandas as pd
 import streamlit as st
 import joblib
-
+import altair as alt
 
 st.set_page_config(page_title="Previsor de Obesidade", layout="wide")
 
@@ -357,21 +357,42 @@ else:
     tab1, tab2, tab3 = st.tabs(["Visao Geral", "Risco", "Habitos"])
 
     with tab1:
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown('<div class="card"><strong>Distribuicao das Classes (%)</strong></div>', unsafe_allow_html=True)
-            class_pct = (df_filtered["Obesity"].value_counts(normalize=True) * 100).sort_values(ascending=False)
-            class_pct.index = [class_pt.get(c, c) for c in class_pct.index]
-            st.bar_chart(class_pct)
-        with col2:
-            st.markdown('<div class="card"><strong>BMI medio por Classe</strong></div>', unsafe_allow_html=True)
-            bmi_by_class = df_filtered.groupby("Obesity")["BMI"].mean().sort_values(ascending=False)
-            bmi_by_class.index = [class_pt.get(c, c) for c in bmi_by_class.index]
-            st.bar_chart(bmi_by_class)
+        st.markdown('<div class="card"><strong>Prevalencia por Classe (%)</strong></div>', unsafe_allow_html=True)
+        class_pct = (df_filtered["Obesity"].value_counts(normalize=True) * 100).sort_values(ascending=False)
+        class_pct.index = [class_pt.get(c, c) for c in class_pct.index]
+        st.bar_chart(class_pct)
 
-        st.markdown('<div class="card"><strong>BMI medio por Faixa de Idade</strong></div>', unsafe_allow_html=True)
-        bmi_age = df_filtered.assign(age_group=age_bins).groupby("age_group", observed=False)["BMI"].mean()
-        st.line_chart(bmi_age)
+        st.markdown('<div class="card"><strong>IMC por Classe (Boxplot)</strong></div>', unsafe_allow_html=True)
+        box_df = df_filtered[["Obesity", "BMI"]].copy()
+        box_df["Classe"] = box_df["Obesity"].map(class_pt)
+        boxplot = (
+            alt.Chart(box_df)
+            .mark_boxplot()
+            .encode(
+                x=alt.X("Classe:N", sort=None, title="Classe"),
+                y=alt.Y("BMI:Q", title="IMC"),
+                color=alt.Color("Classe:N", legend=None),
+                tooltip=["Classe:N", alt.Tooltip("BMI:Q", format=".2f")],
+            )
+            .properties(height=320)
+        )
+        st.altair_chart(boxplot, use_container_width=True)
+
+        st.markdown('<div class="card"><strong>Idade x IMC (Dispersao)</strong></div>', unsafe_allow_html=True)
+        scatter_df = df_filtered[["Age", "BMI", "Obesity"]].copy()
+        scatter_df["Classe"] = scatter_df["Obesity"].map(class_pt)
+        scatter = (
+            alt.Chart(scatter_df)
+            .mark_circle(size=55, opacity=0.55)
+            .encode(
+                x=alt.X("Age:Q", title="Idade"),
+                y=alt.Y("BMI:Q", title="IMC"),
+                color=alt.Color("Classe:N", title="Classe"),
+                tooltip=["Classe:N", alt.Tooltip("Age:Q", format=".0f"), alt.Tooltip("BMI:Q", format=".2f")],
+            )
+            .properties(height=340)
+        )
+        st.altair_chart(scatter, use_container_width=True)
 
     with tab2:
         st.markdown('<div class="card"><strong>Risco clinico alto por Genero (%)</strong></div>', unsafe_allow_html=True)
@@ -393,24 +414,55 @@ else:
         )
         st.bar_chart(risk_by_age)
 
-    with tab3:
-        st.markdown('<div class="card"><strong>Indicadores de Habitos (% Sim)</strong></div>', unsafe_allow_html=True)
-        habits = ["family_history", "FAVC", "SMOKE", "SCC"]
-        habits_yes = pd.Series(
+        risk_table = pd.DataFrame(
             {
-                col: (df_filtered[col].astype(str).str.lower() == "yes").mean() * 100
-                for col in habits
-                if col in df_filtered.columns
+                "Grupo": list(risk_by_gender.index) + list(risk_by_age.index.astype(str)),
+                "Risco Alto (%)": list(risk_by_gender.round(1).values) + list(risk_by_age.round(1).values),
             }
-        ).sort_values(ascending=False)
-        habits_yes = habits_yes.rename(index={
+        )
+        st.markdown('<div class="card"><strong>Tabela Resumo de Risco</strong></div>', unsafe_allow_html=True)
+        st.dataframe(risk_table, use_container_width=True, hide_index=True)
+
+    with tab3:
+        st.markdown('<div class="card"><strong>Risco alto por Habito (Sim/Nao)</strong></div>', unsafe_allow_html=True)
+        habits = {
             "family_history": "Historico familiar",
             "FAVC": "Alimentos caloricos frequentes",
             "SMOKE": "Fumante",
             "SCC": "Monitora calorias",
-        })
-        st.bar_chart(habits_yes)
+        }
+        risk_habits_rows = []
+        for col, label in habits.items():
+            if col not in df_filtered.columns:
+                continue
+            tmp = df_filtered[[col, "Obesity"]].copy()
+            tmp["opt"] = tmp[col].astype(str).str.lower().map({"yes": "Sim", "no": "Nao"})
+            tmp = tmp.dropna(subset=["opt"])
+            agg = tmp.assign(high_risk=tmp["Obesity"].isin(risk_classes)).groupby("opt")["high_risk"].mean() * 100
+            for opt in ["Sim", "Nao"]:
+                if opt in agg.index:
+                    risk_habits_rows.append(
+                        {"Habito": label, "Resposta": opt, "Risco Alto (%)": float(agg.loc[opt])}
+                    )
+
+        risk_habits_df = pd.DataFrame(risk_habits_rows)
+        habits_chart = (
+            alt.Chart(risk_habits_df)
+            .mark_bar()
+            .encode(
+                x=alt.X("Habito:N", title="Habito"),
+                y=alt.Y("Risco Alto (%):Q", title="Risco Alto (%)"),
+                color=alt.Color("Resposta:N", title="Resposta"),
+                xOffset="Resposta:N",
+                tooltip=["Habito:N", "Resposta:N", alt.Tooltip("Risco Alto (%):Q", format=".1f")],
+            )
+            .properties(height=320)
+        )
+        st.altair_chart(habits_chart, use_container_width=True)
 
         st.markdown('<div class="card"><strong>Amostra dos Dados Filtrados</strong></div>', unsafe_allow_html=True)
         st.dataframe(df_filtered.sample(min(80, len(df_filtered)), random_state=42), use_container_width=True)
+
+
+
 
