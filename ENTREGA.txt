@@ -185,17 +185,17 @@ joblib              — Serialização do modelo
 [PREENCHIMENTO OBRIGATÓRIO]
 
 Link da Aplicação Deployada (Streamlit Cloud):
-[PREENCHER APÓS DEPLOY]
+https://obesity-prediction-88xpnqobj52yf24o45r2la.streamlit.app
 
 Link do Repositório GitHub:
 https://github.com/Moniquef419/obesity-prediction
 
 Link do Painel Analítico:
-[Incluso dentro da aplicação Streamlit - Aba "Painel Analítico"]
+Incluso dentro da aplicação Streamlit (aba "Análise")
 
 Observação: A aplicação tem duas abas:
 1. Prever: Para fazer predições em novos pacientes
-2. Painel Analítico: Dashboards e insights dos dados
+2. Análise: Dashboards e insights dos dados
 
 ================================================================================
 9. VALIDAÇÃO E TESTES
