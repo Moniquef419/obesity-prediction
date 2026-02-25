@@ -191,32 +191,32 @@ if menu == "Prever":
         family_history_label = st.selectbox("Historico familiar de excesso de peso?", list(yn_map.keys()))
         favc_label = st.selectbox("Consome alimentos caloricos com frequencia?", list(yn_map.keys()))
         fcvc = st.selectbox(
-            "FCVC (1-3): 1 raramente, 2 as vezes, 3 sempre",
+            "FCVC - Consumo de vegetais (escala 1-3): 1 raramente, 2 as vezes, 3 sempre",
             options=[1, 2, 3],
             index=1,
         )
 
     with col2:
         ncp = st.selectbox(
-            "NCP (1-4): numero de refeicoes principais",
+            "NCP - Refeicoes principais por dia (escala 1-4): 1 uma, 2 duas, 3 tres, 4 quatro ou mais",
             options=[1, 2, 3, 4],
             index=2,
         )
         caec_label = st.selectbox("Come entre refeicoes (CAEC)?", list(caec_map.keys()))
         smoke_label = st.selectbox("Fuma?", list(yn_map.keys()))
         ch2o = st.selectbox(
-            "CH2O (1-3): 1 <1L, 2 1-2L, 3 >2L",
+            "CH2O - Consumo diario de agua (escala 1-3): 1 <1L/dia, 2 1-2L/dia, 3 >2L/dia",
             options=[1, 2, 3],
             index=1,
         )
         scc_label = st.selectbox("Monitora calorias (SCC)?", list(yn_map.keys()))
         faf = st.selectbox(
-            "FAF (0-3): frequencia de atividade fisica",
+            "FAF - Frequencia semanal de atividade fisica (escala 0-3): 0 nenhuma, 1 1-2x/sem, 2 3-4x/sem, 3 5x/sem ou mais",
             options=[0, 1, 2, 3],
             index=1,
         )
         tue = st.selectbox(
-            "TUE (0-2): tempo em dispositivos eletronicos",
+            "TUE - Tempo diario em dispositivos (escala 0-2): 0 0-2h/dia, 1 3-5h/dia, 2 >5h/dia",
             options=[0, 1, 2],
             index=1,
         )
