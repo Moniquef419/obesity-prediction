@@ -11,7 +11,7 @@ def inject_styles():
     st.markdown(
         """
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
 
             :root {
                 --med-blue-900: #0b3c6d;
@@ -26,7 +26,7 @@ def inject_styles():
             }
 
             html, body, [class*="css"] {
-                font-family: "Manrope", sans-serif;
+                font-family: "Inter", sans-serif;
                 color: var(--med-text);
             }
 
@@ -48,15 +48,17 @@ def inject_styles():
 
             .hero h1 {
                 margin: 0;
-                font-size: 1.8rem;
-                font-weight: 800;
+                font-family: "Playfair Display", serif;
+                font-size: 2.2rem;
+                font-weight: 700;
                 letter-spacing: -0.02em;
             }
 
             .hero p {
                 margin: 0.4rem 0 0;
                 opacity: 0.95;
-                font-weight: 500;
+                font-weight: 400;
+                font-size: 1.05rem;
             }
 
             .card {
@@ -67,6 +69,11 @@ def inject_styles():
                 padding: 0.9rem 1rem;
                 box-shadow: 0 6px 16px rgba(16, 47, 70, 0.08);
                 margin-bottom: 0.8rem;
+            }
+
+            h2, h3, h4 {
+                font-family: "Playfair Display", serif;
+                letter-spacing: -0.01em;
             }
 
             .risk-chip {
@@ -243,124 +250,144 @@ if menu == "Prever":
         "A pé": "Walking",
     }
 
-    with st.form("form_prever", clear_on_submit=False):
-        col1, col2 = st.columns(2, gap="large")
+    class_pt = {
+        "Insufficient_Weight": "Abaixo do peso",
+        "Normal_Weight": "Peso normal",
+        "Overweight_Level_I": "Sobrepeso I",
+        "Overweight_Level_II": "Sobrepeso II",
+        "Obesity_Type_I": "Obesidade I",
+        "Obesity_Type_II": "Obesidade II",
+        "Obesity_Type_III": "Obesidade III",
+    }
 
-        with col1:
-            st.markdown('<div class="card"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
-            gender_label = st.selectbox("Gênero", list(gender_map.keys()))
-            age = st.number_input("Idade", min_value=14, max_value=61, value=30)
-            height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
-            weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
-            family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
-            favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
-            fcvc = st.selectbox(
-                "Frequência de consumo de vegetais (FCVC): 1 raramente, 2 às vezes, 3 sempre",
-                options=[1, 2, 3],
-                index=1,
-            )
+    if "pred_result" not in st.session_state:
+        st.session_state.pred_result = None
 
-        with col2:
-            st.markdown('<div class="card"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
-            ncp = st.selectbox(
-                "Número de refeições principais por dia: 1 a 4",
-                options=[1, 2, 3, 4],
-                index=2,
-            )
-            caec_label = st.selectbox(
-                "Consumo de lanches entre as refeições?",
-                list(caec_map.keys()),
-            )
-            smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
-            ch2o = st.selectbox(
-                "Consumo diário de água (CH2O): 1 < 1L, 2 1-2L, 3 > 2L",
-                options=[1, 2, 3],
-                index=1,
-            )
-            scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
-            faf = st.selectbox(
-                "Frequência semanal de atividade física: 0 a 3",
-                options=[0, 1, 2, 3],
-                index=1,
-            )
-            tue = st.selectbox(
-                "Tempo em dispositivos eletrônicos: 0 a 2",
-                options=[0, 1, 2],
-                index=1,
-            )
-            calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
-            mtrans_label = st.selectbox("Meio de transporte habitual", list(mtrans_map.keys()))
+    form_col, result_col = st.columns([2, 1], gap="large")
 
-        bmi_preview = weight / (height ** 2)
-        st.info(f"IMC calculado automaticamente: {bmi_preview:.1f}")
-        submitted = st.form_submit_button("Prever classificação")
+    with form_col:
+        with st.form("form_prever", clear_on_submit=False):
+            col1, col2 = st.columns(2, gap="large")
 
-    if submitted:
-        try:
-            gender = gender_map[gender_label]
-            family_history = yes_no_map[family_history_label]
-            favc = yes_no_map[favc_label]
-            caec = caec_map[caec_label]
-            smoke = yes_no_map[smoke_label]
-            scc = yes_no_map[scc_label]
-            calc = calc_map[calc_label]
-            mtrans = mtrans_map[mtrans_label]
+            with col1:
+                st.markdown('<div class="card"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
+                gender_label = st.selectbox("Gênero", list(gender_map.keys()))
+                age = st.number_input("Idade", min_value=14, max_value=61, value=30)
+                height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
+                weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
+                family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
+                favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
+                fcvc = st.selectbox(
+                    "FCVC (1-3): 1 raramente, 2 às vezes, 3 sempre",
+                    options=[1, 2, 3],
+                    index=1,
+                )
 
-            fcvc = float(np.clip(np.rint(fcvc), 1, 3))
-            ncp = float(np.clip(np.rint(ncp), 1, 4))
-            ch2o = float(np.clip(np.rint(ch2o), 1, 3))
-            faf = float(np.clip(np.rint(faf), 0, 3))
-            tue = float(np.clip(np.rint(tue), 0, 2))
+            with col2:
+                st.markdown('<div class="card"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
+                ncp = st.selectbox("NCP (1-4): número de refeições principais", options=[1, 2, 3, 4], index=2)
+                caec_label = st.selectbox("Consumo de lanches entre as refeições?", list(caec_map.keys()))
+                smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
+                ch2o = st.selectbox("CH2O (1-3): consumo diário de água", options=[1, 2, 3], index=1)
+                scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
+                faf = st.selectbox("FAF (0-3): frequência semanal de atividade física", options=[0, 1, 2, 3], index=1)
+                tue = st.selectbox("TUE (0-2): tempo em dispositivos eletrônicos", options=[0, 1, 2], index=1)
+                calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
+                mtrans_label = st.selectbox("Meio de transporte habitual", list(mtrans_map.keys()))
 
-            bmi = weight / (height ** 2)
-            X = pd.DataFrame(
-                [
-                    {
-                        "Gender": gender,
-                        "Age": age,
-                        "family_history": family_history,
-                        "FAVC": favc,
-                        "FCVC": fcvc,
-                        "NCP": ncp,
-                        "CAEC": caec,
-                        "SMOKE": smoke,
-                        "CH2O": ch2o,
-                        "SCC": scc,
-                        "FAF": faf,
-                        "TUE": tue,
-                        "CALC": calc,
-                        "MTRANS": mtrans,
-                        "BMI": bmi,
-                    }
-                ]
-            )
+            st.markdown('<div class="card"><strong>Atividade e Rotina</strong></div>', unsafe_allow_html=True)
+            at1, at2, at3 = st.columns(3)
+            at1.metric("FAF", str(faf))
+            at2.metric("TUE", str(tue))
+            at3.metric("NCP", str(ncp))
 
-            for col in ["family_history", "FAVC", "SMOKE", "SCC"]:
-                X[col] = X[col].map({"yes": 1, "no": 0})
+            bmi_preview = weight / (height ** 2)
+            st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
+            submitted = st.form_submit_button("Prever classificação")
 
-            for col in ["Age", "FCVC", "NCP", "CH2O", "FAF", "TUE", "BMI"]:
-                X[col] = pd.to_numeric(X[col], errors="coerce")
+        if submitted:
+            try:
+                gender = gender_map[gender_label]
+                family_history = yes_no_map[family_history_label]
+                favc = yes_no_map[favc_label]
+                caec = caec_map[caec_label]
+                smoke = yes_no_map[smoke_label]
+                scc = yes_no_map[scc_label]
+                calc = calc_map[calc_label]
+                mtrans = mtrans_map[mtrans_label]
 
-            pred = model.predict(X)[0]
-            label = le.inverse_transform([pred])[0]
-            render_result_badge(label)
+                fcvc = float(np.clip(np.rint(fcvc), 1, 3))
+                ncp = float(np.clip(np.rint(ncp), 1, 4))
+                ch2o = float(np.clip(np.rint(ch2o), 1, 3))
+                faf = float(np.clip(np.rint(faf), 0, 3))
+                tue = float(np.clip(np.rint(tue), 0, 2))
 
-            if hasattr(model, "predict_proba"):
-                probs = model.predict_proba(X)[0]
-                top_idx = np.argsort(probs)[::-1][:3]
+                bmi = weight / (height ** 2)
+                X = pd.DataFrame(
+                    [
+                        {
+                            "Gender": gender,
+                            "Age": age,
+                            "family_history": family_history,
+                            "FAVC": favc,
+                            "FCVC": fcvc,
+                            "NCP": ncp,
+                            "CAEC": caec,
+                            "SMOKE": smoke,
+                            "CH2O": ch2o,
+                            "SCC": scc,
+                            "FAF": faf,
+                            "TUE": tue,
+                            "CALC": calc,
+                            "MTRANS": mtrans,
+                            "BMI": bmi,
+                        }
+                    ]
+                )
+
+                for col in ["family_history", "FAVC", "SMOKE", "SCC"]:
+                    X[col] = X[col].map({"yes": 1, "no": 0})
+
+                for col in ["Age", "FCVC", "NCP", "CH2O", "FAF", "TUE", "BMI"]:
+                    X[col] = pd.to_numeric(X[col], errors="coerce")
+
+                pred = model.predict(X)[0]
+                label = le.inverse_transform([pred])[0]
+                label_pt = class_pt.get(label, label)
+
+                probs_top = []
+                if hasattr(model, "predict_proba"):
+                    probs = model.predict_proba(X)[0]
+                    top_idx = np.argsort(probs)[::-1][:3]
+                    for idx in top_idx:
+                        class_name = le.inverse_transform([idx])[0]
+                        probs_top.append((class_pt.get(class_name, class_name), probs[idx]))
+
+                st.session_state.pred_result = {
+                    "label_raw": label,
+                    "label_pt": label_pt,
+                    "bmi": bmi,
+                    "probs_top": probs_top,
+                }
+            except Exception as exc:
+                st.error(f"Erro na previsão: {exc}")
+
+    with result_col:
+        st.markdown('<div class="card"><strong>Painel de Resultado</strong></div>', unsafe_allow_html=True)
+        pred_result = st.session_state.pred_result
+        if pred_result:
+            render_result_badge(pred_result["label_raw"])
+            st.metric("Classificação", pred_result["label_pt"])
+            st.metric("IMC", f'{pred_result["bmi"]:.1f}')
+            if pred_result["probs_top"]:
                 st.markdown('<div class="card"><strong>Top 3 probabilidades</strong></div>', unsafe_allow_html=True)
-                pcol1, pcol2, pcol3 = st.columns(3)
-                for pos, idx in enumerate(top_idx):
-                    class_name = le.inverse_transform([idx])[0]
-                    prob_txt = f"{probs[idx]:.1%}"
-                    if pos == 0:
-                        pcol1.metric(class_name, prob_txt)
-                    elif pos == 1:
-                        pcol2.metric(class_name, prob_txt)
-                    else:
-                        pcol3.metric(class_name, prob_txt)
-        except Exception as exc:
-            st.error(f"Erro na previsão: {exc}")
+                for cls, prob in pred_result["probs_top"]:
+                    st.write(f"- {cls}: {prob:.1%}")
+        else:
+            st.markdown(
+                '<div class="card">Preencha o formulário e clique em <strong>Prever classificação</strong> para ver o resultado.</div>',
+                unsafe_allow_html=True,
+            )
 
 else:
     st.subheader("Painel Analítico")
