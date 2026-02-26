@@ -31,34 +31,48 @@ def inject_styles():
             }
 
             .stApp {
-                background:
-                    radial-gradient(circle at 5% 0%, #dbeafe 0%, transparent 45%),
-                    radial-gradient(circle at 95% 0%, #d1fae5 0%, transparent 40%),
-                    linear-gradient(180deg, var(--med-bg-100) 0%, #f8fbff 55%, #ffffff 100%);
+                background: #f3f4f6;
+            }
+
+            .main .block-container {
+                max-width: 1360px;
+                padding-top: 0;
+                padding-left: 2rem;
+                padding-right: 2rem;
             }
 
             .hero {
-                background: linear-gradient(120deg, var(--med-blue-900) 0%, var(--med-blue-700) 55%, var(--med-cyan-400) 100%);
-                border-radius: 18px;
-                padding: 1.2rem 1.4rem;
+                margin: 0 -2rem 2.2rem -2rem;
+                background-image:
+                    linear-gradient(90deg, rgba(11, 60, 109, 0.92) 0%, rgba(18, 95, 154, 0.75) 48%, rgba(255, 255, 255, 0.85) 100%),
+                    url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1920&q=80');
+                background-size: cover;
+                background-position: center;
+                border-radius: 0;
+                min-height: 320px;
+                display: flex;
+                align-items: center;
+                padding: 2.2rem 3rem;
                 color: #ffffff;
-                margin-bottom: 1rem;
-                box-shadow: 0 14px 30px rgba(18, 95, 154, 0.25);
+                box-shadow: 0 12px 24px rgba(18, 95, 154, 0.18);
             }
 
             .hero h1 {
                 margin: 0;
                 font-family: "Playfair Display", serif;
-                font-size: 2.2rem;
+                font-size: 4rem;
                 font-weight: 700;
                 letter-spacing: -0.02em;
+                max-width: 640px;
+                line-height: 1.05;
             }
 
             .hero p {
-                margin: 0.4rem 0 0;
+                margin: 1rem 0 0;
                 opacity: 0.95;
                 font-weight: 400;
-                font-size: 1.05rem;
+                font-size: 1.15rem;
+                max-width: 620px;
             }
 
             .card {
@@ -66,9 +80,26 @@ def inject_styles():
                 border: 1px solid var(--med-border);
                 border-left: 4px solid var(--med-blue-500);
                 border-radius: 14px;
-                padding: 0.9rem 1rem;
+                padding: 1.1rem 1.2rem;
                 box-shadow: 0 6px 16px rgba(16, 47, 70, 0.08);
-                margin-bottom: 0.8rem;
+                margin-bottom: 1rem;
+            }
+            .card-blue { border-left-color: #2563eb; }
+            .card-green { border-left-color: #16a34a; }
+            .card-orange { border-left-color: #ea580c; }
+
+            .section-title {
+                margin: 0 0 0.35rem 0;
+                font-family: "Playfair Display", serif;
+                font-size: 1.7rem;
+                font-weight: 700;
+                color: #0f1f35;
+            }
+
+            .section-subtitle {
+                margin: 0 0 1.1rem 0;
+                color: #5f6e7f;
+                font-size: 0.98rem;
             }
 
             h2, h3, h4 {
@@ -118,15 +149,41 @@ def inject_styles():
                 background: rgba(255, 255, 255, 0.86);
                 border: 1px solid var(--med-border);
                 border-radius: 16px;
-                padding: 1rem 1rem 0.6rem 1rem;
+                padding: 1.1rem 1.2rem 0.8rem 1.2rem;
+            }
+
+            .result-panel {
+                background: #ffffff;
+                border: 1px solid #d1d5db;
+                border-top: 4px solid #2563eb;
+                border-radius: 14px;
+                padding: 1.5rem;
+                box-shadow: 0 6px 18px rgba(15, 23, 42, 0.10);
+                position: sticky;
+                top: 1.2rem;
+            }
+
+            .result-empty {
+                text-align: center;
+                color: #6b7280;
+                padding: 2.5rem 1rem;
+            }
+
+            @media (max-width: 1100px) {
+                .hero {
+                    margin-left: -1rem;
+                    margin-right: -1rem;
+                    padding: 1.6rem 1.2rem;
+                    min-height: 260px;
+                }
+                .hero h1 {
+                    font-size: 2.6rem;
+                }
             }
 
             @media (prefers-color-scheme: dark) {
                 .stApp {
-                    background:
-                        radial-gradient(circle at 5% 0%, #102a43 0%, transparent 45%),
-                        radial-gradient(circle at 95% 0%, #134e4a 0%, transparent 40%),
-                        linear-gradient(180deg, #0b1220 0%, #0f172a 55%, #111827 100%);
+                    background: #111827;
                 }
                 .card {
                     background: #111827;
@@ -134,8 +191,20 @@ def inject_styles():
                     border-left: 4px solid #38bdf8;
                     color: #e5e7eb;
                 }
+                .result-panel {
+                    background: #111827;
+                    border: 1px solid #334155;
+                    border-top: 4px solid #60a5fa;
+                    color: #e5e7eb;
+                }
                 .stMarkdown, .stCaption, label, p, h1, h2, h3 {
                     color: #e5e7eb !important;
+                }
+                .section-title {
+                    color: #e5e7eb;
+                }
+                .section-subtitle {
+                    color: #cbd5e1;
                 }
                 .stDataFrame, .stTable {
                     color: #e5e7eb;
@@ -155,8 +224,10 @@ def render_hero(title, subtitle):
     st.markdown(
         f"""
         <div class="hero">
-            <h1>{title}</h1>
-            <p>{subtitle}</p>
+            <div>
+                <h1>{title}<br/>Pro</h1>
+                <p>{subtitle}</p>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -225,8 +296,11 @@ render_hero(
 menu = st.radio("Menu:", ["Prever", "Painel Analítico"], horizontal=True)
 
 if menu == "Prever":
-    st.subheader("Cadastro do Paciente")
-    st.caption("Preencha os dados clínicos e comportamentais do paciente.")
+    st.markdown('<h2 class="section-title">Cadastro do Paciente</h2>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="section-subtitle">Preencha as informações clínicas e comportamentais do paciente.</p>',
+        unsafe_allow_html=True,
+    )
 
     gender_map = {"Feminino": "Female", "Masculino": "Male"}
     yes_no_map = {"Sim": "yes", "Não": "no"}
@@ -263,47 +337,66 @@ if menu == "Prever":
     if "pred_result" not in st.session_state:
         st.session_state.pred_result = None
 
-    form_col, result_col = st.columns([2, 1], gap="large")
+    form_col, result_col = st.columns([1.55, 0.85], gap="large")
 
     with form_col:
         with st.form("form_prever", clear_on_submit=False):
-            col1, col2 = st.columns(2, gap="large")
+            fcvc_opts = {
+                "1 - Raramente": 1,
+                "2 - Às vezes": 2,
+                "3 - Sempre": 3,
+            }
+            ncp_opts = {
+                "1 - Uma refeição": 1,
+                "2 - Duas refeições": 2,
+                "3 - Três refeições": 3,
+                "4 - Quatro ou mais": 4,
+            }
+            ch2o_opts = {
+                "1 - Menos de 1L": 1,
+                "2 - 1 a 2L": 2,
+                "3 - Mais de 2L": 3,
+            }
+            faf_opts = {
+                "0 - Nenhuma": 0,
+                "1 - 1 a 2 vezes": 1,
+                "2 - 3 a 4 vezes": 2,
+                "3 - 5 vezes ou mais": 3,
+            }
+            tue_opts = {
+                "0 - 0 a 2 horas": 0,
+                "1 - 3 a 5 horas": 1,
+                "2 - Mais de 5 horas": 2,
+            }
 
-            with col1:
-                st.markdown('<div class="card"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
+            st.markdown('<div class="card card-blue"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
+            c1, c2 = st.columns(2, gap="large")
+            with c1:
                 gender_label = st.selectbox("Gênero", list(gender_map.keys()))
-                age = st.number_input("Idade", min_value=14, max_value=61, value=30)
                 height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
+            with c2:
+                age = st.number_input("Idade (anos)", min_value=14, max_value=61, value=30)
                 weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
-                family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
-                favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
-                fcvc = st.selectbox(
-                    "FCVC (1-3): 1 raramente, 2 às vezes, 3 sempre",
-                    options=[1, 2, 3],
-                    index=1,
-                )
 
-            with col2:
-                st.markdown('<div class="card"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
-                ncp = st.selectbox("NCP (1-4): número de refeições principais", options=[1, 2, 3, 4], index=2)
-                caec_label = st.selectbox("Consumo de lanches entre as refeições?", list(caec_map.keys()))
-                smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
-                ch2o = st.selectbox("CH2O (1-3): consumo diário de água", options=[1, 2, 3], index=1)
-                scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
-                faf = st.selectbox("FAF (0-3): frequência semanal de atividade física", options=[0, 1, 2, 3], index=1)
-                tue = st.selectbox("TUE (0-2): tempo em dispositivos eletrônicos", options=[0, 1, 2], index=1)
-                calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
-                mtrans_label = st.selectbox("Meio de transporte habitual", list(mtrans_map.keys()))
+            st.markdown('<div class="card card-green"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
+            family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
+            favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
+            fcvc_label = st.selectbox("Frequência de consumo de vegetais (FCVC)", list(fcvc_opts.keys()), index=1)
+            ncp_label = st.selectbox("Número de refeições principais por dia (NCP)", list(ncp_opts.keys()), index=2)
+            caec_label = st.selectbox("Consumo de lanches entre as refeições (CAEC)?", list(caec_map.keys()))
+            smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
+            ch2o_label = st.selectbox("Consumo diário de água (CH2O)", list(ch2o_opts.keys()), index=1)
+            scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
 
-            st.markdown('<div class="card"><strong>Atividade e Rotina</strong></div>', unsafe_allow_html=True)
-            at1, at2, at3 = st.columns(3)
-            at1.metric("FAF", str(faf))
-            at2.metric("TUE", str(tue))
-            at3.metric("NCP", str(ncp))
+            st.markdown('<div class="card card-orange"><strong>Atividade Física</strong></div>', unsafe_allow_html=True)
+            faf_label = st.selectbox("Frequência semanal de atividade física", list(faf_opts.keys()), index=1)
+            tue_label = st.selectbox("Tempo em dispositivos eletrônicos", list(tue_opts.keys()), index=1)
+            calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
+            mtrans_label = st.selectbox("Meio de transporte habitual", list(mtrans_map.keys()))
 
             bmi_preview = weight / (height ** 2)
             st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
-            submitted = st.form_submit_button("Prever classificação")
+            submitted = st.form_submit_button("Prever Classificação")
 
         if submitted:
             try:
@@ -315,6 +408,11 @@ if menu == "Prever":
                 scc = yes_no_map[scc_label]
                 calc = calc_map[calc_label]
                 mtrans = mtrans_map[mtrans_label]
+                fcvc = fcvc_opts[fcvc_label]
+                ncp = ncp_opts[ncp_label]
+                ch2o = ch2o_opts[ch2o_label]
+                faf = faf_opts[faf_label]
+                tue = tue_opts[tue_label]
 
                 fcvc = float(np.clip(np.rint(fcvc), 1, 3))
                 ncp = float(np.clip(np.rint(ncp), 1, 4))
@@ -373,9 +471,9 @@ if menu == "Prever":
                 st.error(f"Erro na previsão: {exc}")
 
     with result_col:
-        st.markdown('<div class="card"><strong>Painel de Resultado</strong></div>', unsafe_allow_html=True)
         pred_result = st.session_state.pred_result
         if pred_result:
+            st.markdown('<div class="result-panel"><strong>Resultado</strong></div>', unsafe_allow_html=True)
             render_result_badge(pred_result["label_raw"])
             st.metric("Classificação", pred_result["label_pt"])
             st.metric("IMC", f'{pred_result["bmi"]:.1f}')
@@ -385,7 +483,12 @@ if menu == "Prever":
                     st.write(f"- {cls}: {prob:.1%}")
         else:
             st.markdown(
-                '<div class="card">Preencha o formulário e clique em <strong>Prever classificação</strong> para ver o resultado.</div>',
+                """
+                <div class="result-panel result-empty">
+                    <h3 style="margin-bottom:0.4rem;">Resultado</h3>
+                    <p>Preencha o formulário e clique em <strong>"Prever Classificação"</strong><br/>para visualizar os resultados.</p>
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
