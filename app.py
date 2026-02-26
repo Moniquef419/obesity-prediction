@@ -45,7 +45,7 @@ def inject_styles():
                 margin: 0 -2rem 2.2rem -2rem;
                 background-image:
                     linear-gradient(90deg, rgba(11, 60, 109, 0.92) 0%, rgba(18, 95, 154, 0.75) 48%, rgba(255, 255, 255, 0.85) 100%),
-                    url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1920&q=80');
+                    url('https://source.unsplash.com/1920x1080/?hospital,exercise,health');
                 background-size: cover;
                 background-position: center;
                 border-radius: 0;
@@ -132,6 +132,15 @@ def inject_styles():
 
             .stButton > button:hover {
                 filter: brightness(1.05);
+            }
+
+            [data-testid="stFormSubmitButton"] > button {
+                height: 54px;
+                font-size: 1.15rem;
+                font-weight: 700;
+                border-radius: 12px;
+                background: linear-gradient(90deg, #2563eb, #1d4ed8);
+                box-shadow: 0 10px 22px rgba(37, 99, 235, 0.32);
             }
 
             div[data-baseweb="select"] > div,
@@ -396,7 +405,9 @@ if menu == "Prever":
 
             bmi_preview = weight / (height ** 2)
             st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
-            submitted = st.form_submit_button("Prever Classificação")
+            b1, b2, b3 = st.columns([1, 2, 1])
+            with b2:
+                submitted = st.form_submit_button("Prever Classificação")
 
         if submitted:
             try:
