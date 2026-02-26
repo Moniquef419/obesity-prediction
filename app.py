@@ -87,6 +87,21 @@ def inject_styles():
             .card-blue { border-left-color: #2563eb; }
             .card-green { border-left-color: #16a34a; }
             .card-orange { border-left-color: #ea580c; }
+            .block-header strong {
+                font-family: "Playfair Display", serif;
+                font-size: 2rem;
+                font-weight: 700;
+                line-height: 1.1;
+            }
+            .activity-header strong {
+                font-size: 2.25rem;
+            }
+            .habits-header strong {
+                font-size: 2.25rem;
+            }
+            .personal-header strong {
+                font-size: 2.25rem;
+            }
 
             .section-title {
                 margin: 0 0 0.35rem 0;
@@ -136,11 +151,13 @@ def inject_styles():
 
             [data-testid="stFormSubmitButton"] > button {
                 height: 54px;
-                font-size: 1.15rem;
+                font-size: 1.2rem;
                 font-weight: 700;
                 border-radius: 12px;
-                background: linear-gradient(90deg, #2563eb, #1d4ed8);
-                box-shadow: 0 10px 22px rgba(37, 99, 235, 0.32);
+                color: #ffffff !important;
+                background: linear-gradient(90deg, #3b82f6, #2563eb);
+                box-shadow: 0 8px 18px rgba(59, 130, 246, 0.24);
+                border: 1px solid rgba(37, 99, 235, 0.35);
             }
 
             div[data-baseweb="select"] > div,
@@ -243,13 +260,13 @@ def render_hero(title, subtitle):
     )
 
 
-def render_result_badge(label):
+def render_result_badge(label_raw, label_display):
     high = {"Obesity_Type_II", "Obesity_Type_III"}
     medium = {"Overweight_Level_I", "Overweight_Level_II", "Obesity_Type_I"}
-    if label in high:
+    if label_raw in high:
         css_class = "risk-chip risk-high"
         text = "Risco Elevado"
-    elif label in medium:
+    elif label_raw in medium:
         css_class = "risk-chip risk-med"
         text = "Risco Moderado"
     else:
@@ -259,7 +276,7 @@ def render_result_badge(label):
     st.markdown(
         f"""
         <div class="card">
-            <strong>Classificação prevista:</strong> {label}<br/>
+            <strong>Classificação prevista:</strong> {label_display}<br/>
             <span class="{css_class}">{text}</span>
         </div>
         """,
@@ -378,7 +395,7 @@ if menu == "Prever":
                 "2 - Mais de 5 horas": 2,
             }
 
-            st.markdown('<div class="card card-blue"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
+            st.markdown('<div class="card card-blue block-header personal-header"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
             c1, c2 = st.columns(2, gap="large")
             with c1:
                 gender_label = st.selectbox("Gênero", list(gender_map.keys()))
@@ -387,7 +404,7 @@ if menu == "Prever":
                 age = st.number_input("Idade (anos)", min_value=14, max_value=61, value=30)
                 weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
 
-            st.markdown('<div class="card card-green"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
+            st.markdown('<div class="card card-green block-header habits-header"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
             family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
             favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
             fcvc_label = st.selectbox("Frequência de consumo de vegetais (FCVC)", list(fcvc_opts.keys()), index=1)
@@ -397,7 +414,7 @@ if menu == "Prever":
             ch2o_label = st.selectbox("Consumo diário de água (CH2O)", list(ch2o_opts.keys()), index=1)
             scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
 
-            st.markdown('<div class="card card-orange"><strong>Atividade Física</strong></div>', unsafe_allow_html=True)
+            st.markdown('<div class="card card-orange block-header activity-header"><strong>Atividade Física</strong></div>', unsafe_allow_html=True)
             faf_label = st.selectbox("Frequência semanal de atividade física", list(faf_opts.keys()), index=1)
             tue_label = st.selectbox("Tempo em dispositivos eletrônicos", list(tue_opts.keys()), index=1)
             calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
@@ -405,7 +422,7 @@ if menu == "Prever":
 
             bmi_preview = weight / (height ** 2)
             st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
-            b1, b2, b3 = st.columns([1, 2, 1])
+            b1, b2, b3 = st.columns([1, 3, 1])
             with b2:
                 submitted = st.form_submit_button("Prever Classificação")
 
@@ -485,7 +502,7 @@ if menu == "Prever":
         pred_result = st.session_state.pred_result
         if pred_result:
             st.markdown('<div class="result-panel"><strong>Resultado</strong></div>', unsafe_allow_html=True)
-            render_result_badge(pred_result["label_raw"])
+            render_result_badge(pred_result["label_raw"], pred_result["label_pt"])
             st.metric("Classificação", pred_result["label_pt"])
             st.metric("IMC", f'{pred_result["bmi"]:.1f}')
             if pred_result["probs_top"]:
