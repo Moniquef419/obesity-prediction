@@ -220,33 +220,33 @@ if menu == "Prever":
         with col2:
             st.markdown('<div class="card"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
             ncp = st.selectbox(
-                "Número de refeições principais por dia (NCP): 1 a 4",
+                "Número de refeições principais por dia: 1 a 4",
                 options=[1, 2, 3, 4],
                 index=2,
             )
             caec_label = st.selectbox(
-                "Consumo de lanches entre as refeições (CAEC)?",
+                "Consumo de lanches entre as refeições?",
                 list(caec_map.keys()),
             )
-            smoke_label = st.selectbox("Hábito de fumar (SMOKE)?", list(yes_no_map.keys()))
+            smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
             ch2o = st.selectbox(
                 "Consumo diário de água (CH2O): 1 < 1L, 2 1-2L, 3 > 2L",
                 options=[1, 2, 3],
                 index=1,
             )
-            scc_label = st.selectbox("Monitora a ingestão calórica diária (SCC)?", list(yes_no_map.keys()))
+            scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
             faf = st.selectbox(
-                "Frequência semanal de atividade física (FAF): 0 a 3",
+                "Frequência semanal de atividade física: 0 a 3",
                 options=[0, 1, 2, 3],
                 index=1,
             )
             tue = st.selectbox(
-                "Tempo em dispositivos eletrônicos (TUE): 0 a 2",
+                "Tempo em dispositivos eletrônicos: 0 a 2",
                 options=[0, 1, 2],
                 index=1,
             )
-            calc_label = st.selectbox("Consumo de bebida alcoólica (CALC)?", list(calc_map.keys()))
-            mtrans_label = st.selectbox("Meio de transporte habitual (MTRANS)", list(mtrans_map.keys()))
+            calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
+            mtrans_label = st.selectbox("Meio de transporte habitual", list(mtrans_map.keys()))
 
         bmi_preview = weight / (height ** 2)
         st.info(f"IMC calculado automaticamente: {bmi_preview:.1f}")
