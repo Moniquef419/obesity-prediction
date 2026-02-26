@@ -13,21 +13,37 @@ def inject_styles():
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
 
+            :root {
+                --med-blue-900: #0b3c6d;
+                --med-blue-700: #125f9a;
+                --med-blue-500: #1f84c7;
+                --med-cyan-400: #2db7b6;
+                --med-bg-100: #eef5fb;
+                --med-bg-200: #e3eff9;
+                --med-surface: #ffffff;
+                --med-text: #123047;
+                --med-border: #c8d9e8;
+            }
+
             html, body, [class*="css"] {
                 font-family: "Manrope", sans-serif;
+                color: var(--med-text);
             }
 
             .stApp {
-                background: radial-gradient(circle at 10% 0%, #eaf7f5 0%, #f7fafc 35%, #ffffff 100%);
+                background:
+                    radial-gradient(circle at 5% 0%, #dbeafe 0%, transparent 45%),
+                    radial-gradient(circle at 95% 0%, #d1fae5 0%, transparent 40%),
+                    linear-gradient(180deg, var(--med-bg-100) 0%, #f8fbff 55%, #ffffff 100%);
             }
 
             .hero {
-                background: linear-gradient(120deg, #0f766e 0%, #155e75 45%, #0e7490 100%);
+                background: linear-gradient(120deg, var(--med-blue-900) 0%, var(--med-blue-700) 55%, var(--med-cyan-400) 100%);
                 border-radius: 18px;
                 padding: 1.2rem 1.4rem;
                 color: #ffffff;
                 margin-bottom: 1rem;
-                box-shadow: 0 12px 30px rgba(15, 118, 110, 0.22);
+                box-shadow: 0 14px 30px rgba(18, 95, 154, 0.25);
             }
 
             .hero h1 {
@@ -44,11 +60,12 @@ def inject_styles():
             }
 
             .card {
-                background: #ffffff;
-                border: 1px solid #dbe5ec;
+                background: var(--med-surface);
+                border: 1px solid var(--med-border);
+                border-left: 4px solid var(--med-blue-500);
                 border-radius: 14px;
                 padding: 0.9rem 1rem;
-                box-shadow: 0 5px 14px rgba(15, 23, 42, 0.05);
+                box-shadow: 0 6px 16px rgba(16, 47, 70, 0.08);
                 margin-bottom: 0.8rem;
             }
 
@@ -71,21 +88,43 @@ def inject_styles():
                 border-radius: 10px;
                 color: white;
                 font-weight: 700;
-                background: linear-gradient(90deg, #0f766e, #0e7490);
-                box-shadow: 0 8px 18px rgba(14, 116, 144, 0.28);
+                background: linear-gradient(90deg, var(--med-blue-700), var(--med-blue-500));
+                box-shadow: 0 8px 18px rgba(31, 132, 199, 0.32);
             }
 
             .stButton > button:hover {
                 filter: brightness(1.05);
             }
 
+            div[data-baseweb="select"] > div,
+            div[data-baseweb="input"] > div {
+                background-color: #f8fcff;
+                border-color: var(--med-border);
+            }
+
+            div[data-baseweb="input"] input,
+            div[data-baseweb="select"] * {
+                color: var(--med-text);
+            }
+
+            [data-testid="stForm"] {
+                background: rgba(255, 255, 255, 0.86);
+                border: 1px solid var(--med-border);
+                border-radius: 16px;
+                padding: 1rem 1rem 0.6rem 1rem;
+            }
+
             @media (prefers-color-scheme: dark) {
                 .stApp {
-                    background: radial-gradient(circle at 10% 0%, #0b1220 0%, #0f172a 35%, #111827 100%);
+                    background:
+                        radial-gradient(circle at 5% 0%, #102a43 0%, transparent 45%),
+                        radial-gradient(circle at 95% 0%, #134e4a 0%, transparent 40%),
+                        linear-gradient(180deg, #0b1220 0%, #0f172a 55%, #111827 100%);
                 }
                 .card {
                     background: #111827;
                     border: 1px solid #334155;
+                    border-left: 4px solid #38bdf8;
                     color: #e5e7eb;
                 }
                 .stMarkdown, .stCaption, label, p, h1, h2, h3 {
@@ -93,6 +132,10 @@ def inject_styles():
                 }
                 .stDataFrame, .stTable {
                     color: #e5e7eb;
+                }
+                [data-testid="stForm"] {
+                    background: rgba(17, 24, 39, 0.75);
+                    border: 1px solid #334155;
                 }
             }
         </style>
