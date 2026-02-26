@@ -89,18 +89,18 @@ def inject_styles():
             .card-orange { border-left-color: #ea580c; }
             .block-header strong {
                 font-family: "Playfair Display", serif;
-                font-size: 2rem;
+                font-size: 1.7rem;
                 font-weight: 700;
                 line-height: 1.1;
             }
             .activity-header strong {
-                font-size: 2.25rem;
+                font-size: 1.8rem;
             }
             .habits-header strong {
-                font-size: 2.25rem;
+                font-size: 1.8rem;
             }
             .personal-header strong {
-                font-size: 2.25rem;
+                font-size: 1.8rem;
             }
 
             .section-title {
