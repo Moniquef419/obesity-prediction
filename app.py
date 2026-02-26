@@ -78,6 +78,23 @@ def inject_styles():
             .stButton > button:hover {
                 filter: brightness(1.05);
             }
+
+            @media (prefers-color-scheme: dark) {
+                .stApp {
+                    background: radial-gradient(circle at 10% 0%, #0b1220 0%, #0f172a 35%, #111827 100%);
+                }
+                .card {
+                    background: #111827;
+                    border: 1px solid #334155;
+                    color: #e5e7eb;
+                }
+                .stMarkdown, .stCaption, label, p, h1, h2, h3 {
+                    color: #e5e7eb !important;
+                }
+                .stDataFrame, .stTable {
+                    color: #e5e7eb;
+                }
+            }
         </style>
         """,
         unsafe_allow_html=True,
@@ -112,7 +129,7 @@ def render_result_badge(label):
     st.markdown(
         f"""
         <div class="card">
-            <strong>Classificacao prevista:</strong> {label}<br/>
+            <strong>Classificação prevista:</strong> {label}<br/>
             <span class="{css_class}">{text}</span>
         </div>
         """,
@@ -126,7 +143,7 @@ def load_model():
         label_encoder = joblib.load("models/label_encoder.joblib")
         return model, label_encoder
     except FileNotFoundError as exc:
-        st.error(f"Arquivo de modelo nao encontrado: {exc}")
+        st.error(f"Arquivo de modelo não encontrado: {exc}")
         st.stop()
     except Exception as exc:
         st.error(f"Erro ao carregar modelo: {exc}")
@@ -139,7 +156,7 @@ def load_data():
         data["BMI"] = data["Weight"] / (data["Height"] ** 2)
         return data
     except FileNotFoundError as exc:
-        st.error(f"Arquivo CSV nao encontrado: {exc}")
+        st.error(f"Arquivo CSV não encontrado: {exc}")
         st.stop()
     except Exception as exc:
         st.error(f"Erro ao carregar CSV: {exc}")
@@ -152,27 +169,27 @@ inject_styles()
 
 render_hero(
     "Previsor de Obesidade",
-    "Suporte clinico com predicao individual e painel analitico interativo.",
+    "Suporte clínico com predição individual e painel analítico interativo.",
 )
 
-menu = st.radio("Menu:", ["Prever", "Painel Analitico"], horizontal=True)
+menu = st.radio("Menu:", ["Prever", "Painel Analítico"], horizontal=True)
 
 if menu == "Prever":
     st.subheader("Cadastro do Paciente")
     col1, col2 = st.columns(2)
-    st.caption("Preencha os dados clinicos e comportamentais do paciente.")
+    st.caption("Preencha os dados clínicos e comportamentais do paciente.")
 
     gender_map = {"Feminino": "Female", "Masculino": "Male"}
-    yes_no_map = {"Sim": "yes", "Nao": "no"}
+    yes_no_map = {"Sim": "yes", "Não": "no"}
     caec_map = {
-        "Nao": "no",
-        "As vezes": "Sometimes",
+        "Não": "no",
+        "Às vezes": "Sometimes",
         "Frequentemente": "Frequently",
         "Sempre": "Always",
     }
     calc_map = {
-        "Nao": "no",
-        "As vezes": "Sometimes",
+        "Não": "no",
+        "Às vezes": "Sometimes",
         "Frequentemente": "Frequently",
         "Sempre": "Always",
     }
@@ -180,8 +197,8 @@ if menu == "Prever":
         "Carro": "Automobile",
         "Moto": "Motorbike",
         "Bicicleta": "Bike",
-        "Transporte publico": "Public_Transportation",
-        "A pe": "Walking",
+        "Transporte público": "Public_Transportation",
+        "A pé": "Walking",
     }
 
     with col1:
@@ -189,42 +206,42 @@ if menu == "Prever":
         age = st.number_input("Idade (Age)", min_value=14, max_value=61, value=30)
         height = st.number_input("Altura em metros (Height)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
         weight = st.number_input("Peso em quilogramas (Weight)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
-        family_history_label = st.selectbox("Historico familiar de excesso de peso (family_history)", list(yes_no_map.keys()))
-        favc_label = st.selectbox("Consumo frequente de alimentos muito caloricos (FAVC)", list(yes_no_map.keys()))
+        family_history_label = st.selectbox("Histórico familiar de excesso de peso (family_history)?", list(yes_no_map.keys()))
+        favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos (FAVC)?", list(yes_no_map.keys()))
         fcvc = st.selectbox(
-            "Frequencia de consumo de vegetais nas refeicoes (FCVC) - escala 1 a 3: 1 raramente, 2 as vezes, 3 sempre",
+            "Frequência de consumo de vegetais nas refeições (FCVC) - escala 1 a 3: 1 raramente, 2 às vezes, 3 sempre",
             options=[1, 2, 3],
             index=1,
         )
 
     with col2:
         ncp = st.selectbox(
-            "Numero de refeicoes principais por dia (NCP) - escala 1 a 4: 1 uma refeicao, 2 duas, 3 tres, 4 quatro ou mais",
+            "Número de refeições principais por dia (NCP) - escala 1 a 4: 1 uma refeição, 2 duas, 3 três, 4 quatro ou mais",
             options=[1, 2, 3, 4],
             index=2,
         )
         caec_label = st.selectbox(
-            "Consumo de lanches entre as refeicoes (CAEC)",
+            "Consumo de lanches entre as refeições (CAEC)?",
             list(caec_map.keys()),
         )
-        smoke_label = st.selectbox("Habito de fumar (SMOKE)", list(yes_no_map.keys()))
+        smoke_label = st.selectbox("Hábito de fumar (SMOKE)?", list(yes_no_map.keys()))
         ch2o = st.selectbox(
-            "Consumo diario de agua (CH2O) - escala 1 a 3: 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia",
+            "Consumo diário de água (CH2O) - escala 1 a 3: 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia",
             options=[1, 2, 3],
             index=1,
         )
-        scc_label = st.selectbox("Monitora a ingestao calorica diaria (SCC)", list(yes_no_map.keys()))
+        scc_label = st.selectbox("Monitora a ingestão calórica diária (SCC)?", list(yes_no_map.keys()))
         faf = st.selectbox(
-            "Frequencia semanal de atividade fisica (FAF) - escala 0 a 3: 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais",
+            "Frequência semanal de atividade física (FAF) - escala 0 a 3: 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais",
             options=[0, 1, 2, 3],
             index=1,
         )
         tue = st.selectbox(
-            "Tempo diario usando dispositivos eletronicos (TUE) - escala 0 a 2: 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia",
+            "Tempo diário usando dispositivos eletrônicos (TUE) - escala 0 a 2: 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia",
             options=[0, 1, 2],
             index=1,
         )
-        calc_label = st.selectbox("Consumo de bebida alcoolica (CALC)", list(calc_map.keys()))
+        calc_label = st.selectbox("Consumo de bebida alcoólica (CALC)?", list(calc_map.keys()))
         mtrans_label = st.selectbox("Meio de transporte habitual (MTRANS)", list(mtrans_map.keys()))
 
     if st.button("Prever"):
@@ -292,17 +309,17 @@ if menu == "Prever":
                     else:
                         pcol3.metric(class_name, prob_txt)
         except Exception as exc:
-            st.error(f"Erro na previsao: {exc}")
+            st.error(f"Erro na previsão: {exc}")
 
 else:
-    st.subheader("Painel Analitico")
-    st.caption("Painel simplificado para leitura clinica rapida.")
+    st.subheader("Painel Analítico")
+    st.caption("Painel simplificado para leitura clínica rápida.")
 
     with st.expander("Filtros", expanded=True):
         c1, c2, c3 = st.columns(3)
         with c1:
             gender_opts = sorted(df["Gender"].dropna().unique().tolist())
-            selected_gender = st.multiselect("Genero", gender_opts, default=gender_opts)
+            selected_gender = st.multiselect("Gênero", gender_opts, default=gender_opts)
         with c2:
             age_min = int(df["Age"].min())
             age_max = int(df["Age"].max())
@@ -354,7 +371,7 @@ else:
         labels=["<=18", "19-25", "26-35", "36-45", "46-60", "60+"],
     )
 
-    tab1, tab2, tab3 = st.tabs(["Visao Geral", "Risco", "Habitos"])
+    tab1, tab2, tab3 = st.tabs(["Visão Geral", "Risco", "Hábitos"])
 
     with tab1:
         st.markdown('<div class="card"><strong>Prevalencia por Classe (%)</strong></div>', unsafe_allow_html=True)
@@ -378,7 +395,7 @@ else:
         )
         st.altair_chart(boxplot, use_container_width=True)
 
-        st.markdown('<div class="card"><strong>Idade x IMC (Dispersao)</strong></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><strong>Idade x IMC (Dispersão)</strong></div>', unsafe_allow_html=True)
         scatter_df = df_filtered[["Age", "BMI", "Obesity"]].copy()
         scatter_df["Classe"] = scatter_df["Obesity"].map(class_pt)
         scatter = (
@@ -395,7 +412,7 @@ else:
         st.altair_chart(scatter, use_container_width=True)
 
     with tab2:
-        st.markdown('<div class="card"><strong>Risco clinico alto por Genero (%)</strong></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><strong>Risco clínico alto por Gênero (%)</strong></div>', unsafe_allow_html=True)
         risk_by_gender = (
             df_filtered.assign(high_risk=df_filtered["Obesity"].isin(risk_classes))
             .groupby("Gender")["high_risk"]
@@ -405,7 +422,7 @@ else:
         )
         st.bar_chart(risk_by_gender)
 
-        st.markdown('<div class="card"><strong>Risco clinico alto por Faixa de Idade (%)</strong></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><strong>Risco clínico alto por Faixa de Idade (%)</strong></div>', unsafe_allow_html=True)
         risk_by_age = (
             df_filtered.assign(age_group=age_bins, high_risk=df_filtered["Obesity"].isin(risk_classes))
             .groupby("age_group", observed=False)["high_risk"]
@@ -420,13 +437,13 @@ else:
                 "Risco Alto (%)": list(risk_by_gender.round(1).values) + list(risk_by_age.round(1).values),
             }
         )
-        st.markdown('<div class="card"><strong>Tabela Resumo de Risco</strong></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><strong>Tabela-resumo de risco</strong></div>', unsafe_allow_html=True)
         st.dataframe(risk_table, use_container_width=True, hide_index=True)
 
     with tab3:
-        st.markdown('<div class="card"><strong>Risco alto por Habito (Sim/Nao)</strong></div>', unsafe_allow_html=True)
+        st.markdown('<div class="card"><strong>Risco alto por Hábito (Sim/Não)</strong></div>', unsafe_allow_html=True)
         habits = {
-            "family_history": "Historico familiar",
+            "family_history": "Histórico familiar",
             "FAVC": "Alimentos caloricos frequentes",
             "SMOKE": "Fumante",
             "SCC": "Monitora calorias",
@@ -436,13 +453,13 @@ else:
             if col not in df_filtered.columns:
                 continue
             tmp = df_filtered[[col, "Obesity"]].copy()
-            tmp["opt"] = tmp[col].astype(str).str.lower().map({"yes": "Sim", "no": "Nao"})
+            tmp["opt"] = tmp[col].astype(str).str.lower().map({"yes": "Sim", "no": "Não"})
             tmp = tmp.dropna(subset=["opt"])
             agg = tmp.assign(high_risk=tmp["Obesity"].isin(risk_classes)).groupby("opt")["high_risk"].mean() * 100
-            for opt in ["Sim", "Nao"]:
+            for opt in ["Sim", "Não"]:
                 if opt in agg.index:
                     risk_habits_rows.append(
-                        {"Habito": label, "Resposta": opt, "Risco Alto (%)": float(agg.loc[opt])}
+                        {"Hábito": label, "Resposta": opt, "Risco Alto (%)": float(agg.loc[opt])}
                     )
 
         risk_habits_df = pd.DataFrame(risk_habits_rows)
@@ -450,11 +467,11 @@ else:
             alt.Chart(risk_habits_df)
             .mark_bar()
             .encode(
-                x=alt.X("Habito:N", title="Habito"),
+                x=alt.X("Hábito:N", title="Hábito"),
                 y=alt.Y("Risco Alto (%):Q", title="Risco Alto (%)"),
                 color=alt.Color("Resposta:N", title="Resposta"),
                 xOffset="Resposta:N",
-                tooltip=["Habito:N", "Resposta:N", alt.Tooltip("Risco Alto (%):Q", format=".1f")],
+                tooltip=["Hábito:N", "Resposta:N", alt.Tooltip("Risco Alto (%):Q", format=".1f")],
             )
             .properties(height=320)
         )
@@ -462,6 +479,7 @@ else:
 
         st.markdown('<div class="card"><strong>Amostra dos Dados Filtrados</strong></div>', unsafe_allow_html=True)
         st.dataframe(df_filtered.sample(min(80, len(df_filtered)), random_state=42), use_container_width=True)
+
 
 
 
