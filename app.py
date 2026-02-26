@@ -202,47 +202,47 @@ if menu == "Prever":
     }
 
     with col1:
-        gender_label = st.selectbox("Genero (Gender)", list(gender_map.keys()))
-        age = st.number_input("Idade (Age)", min_value=14, max_value=61, value=30)
-        height = st.number_input("Altura em metros (Height)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
-        weight = st.number_input("Peso em quilogramas (Weight)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
-        family_history_label = st.selectbox("Histórico familiar de excesso de peso (family_history)?", list(yes_no_map.keys()))
-        favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos (FAVC)?", list(yes_no_map.keys()))
+        gender_label = st.selectbox("Gênero ?", list(gender_map.keys()))
+        age = st.number_input("Idade ?", min_value=14, max_value=61, value=30)
+        height = st.number_input("Altura ?", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
+        weight = st.number_input("Peso ?", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
+        family_history_label = st.selectbox("Histórico familiar de excesso de peso ?", list(yes_no_map.keys()))
+        favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos ?", list(yes_no_map.keys()))
         fcvc = st.selectbox(
-            "Frequência de consumo de vegetais nas refeições (FCVC) - escala 1 a 3: 1 raramente, 2 às vezes, 3 sempre",
+            "Frequência de consumo de vegetais nas refeições (FCVC) - escala 1 a 3: 1 raramente, 2 às vezes, 3 sempre.",
             options=[1, 2, 3],
             index=1,
         )
 
     with col2:
         ncp = st.selectbox(
-            "Número de refeições principais por dia (NCP) - escala 1 a 4: 1 uma refeição, 2 duas, 3 três, 4 quatro ou mais",
+            "Número de refeições principais por dia - escala 1 a 4: 1 uma refeição, 2 duas, 3 três, 4 quatro ou mais.",
             options=[1, 2, 3, 4],
             index=2,
         )
         caec_label = st.selectbox(
-            "Consumo de lanches entre as refeições (CAEC)?",
+            "Consumo de lanches entre as refeições ?",
             list(caec_map.keys()),
         )
-        smoke_label = st.selectbox("Hábito de fumar (SMOKE)?", list(yes_no_map.keys()))
+        smoke_label = st.selectbox("Hábito de fumar ?", list(yes_no_map.keys()))
         ch2o = st.selectbox(
-            "Consumo diário de água (CH2O) - escala 1 a 3: 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia",
+            "Consumo diário de água - escala 1 a 3: 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia.",
             options=[1, 2, 3],
             index=1,
         )
-        scc_label = st.selectbox("Monitora a ingestão calórica diária (SCC)?", list(yes_no_map.keys()))
+        scc_label = st.selectbox("Monitora a ingestão calórica diária ?", list(yes_no_map.keys()))
         faf = st.selectbox(
-            "Frequência semanal de atividade física (FAF) - escala 0 a 3: 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais",
+            "Frequência semanal de atividade física - escala 0 a 3: 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais.",
             options=[0, 1, 2, 3],
             index=1,
         )
         tue = st.selectbox(
-            "Tempo diário usando dispositivos eletrônicos (TUE) - escala 0 a 2: 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia",
+            "Tempo diário usando dispositivos eletrônicos - escala 0 a 2: 0 ~0-2 h/dia, 1 ~3-5 h/dia, 2 > 5 h/dia.",
             options=[0, 1, 2],
             index=1,
         )
-        calc_label = st.selectbox("Consumo de bebida alcoólica (CALC)?", list(calc_map.keys()))
-        mtrans_label = st.selectbox("Meio de transporte habitual (MTRANS)", list(mtrans_map.keys()))
+        calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
+        mtrans_label = st.selectbox("Meio de transporte habitual.", list(mtrans_map.keys()))
 
     if st.button("Prever"):
         try:
