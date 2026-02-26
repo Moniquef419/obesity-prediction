@@ -202,12 +202,12 @@ if menu == "Prever":
     }
 
     with col1:
-        gender_label = st.selectbox("Gênero ?", list(gender_map.keys()))
-        age = st.number_input("Idade ?", min_value=14, max_value=61, value=30)
-        height = st.number_input("Altura ?", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
-        weight = st.number_input("Peso ?", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
-        family_history_label = st.selectbox("Histórico familiar de excesso de peso ?", list(yes_no_map.keys()))
-        favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos ?", list(yes_no_map.keys()))
+        gender_label = st.selectbox("Gênero.", list(gender_map.keys()))
+        age = st.number_input("Idade.", min_value=14, max_value=61, value=30)
+        height = st.number_input("Altura.", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
+        weight = st.number_input("Peso.", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
+        family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
+        favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
         fcvc = st.selectbox(
             "Frequência de consumo de vegetais nas refeições (FCVC) - escala 1 a 3: 1 raramente, 2 às vezes, 3 sempre.",
             options=[1, 2, 3],
@@ -221,16 +221,16 @@ if menu == "Prever":
             index=2,
         )
         caec_label = st.selectbox(
-            "Consumo de lanches entre as refeições ?",
+            "Consumo de lanches entre as refeições?",
             list(caec_map.keys()),
         )
-        smoke_label = st.selectbox("Hábito de fumar ?", list(yes_no_map.keys()))
+        smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
         ch2o = st.selectbox(
             "Consumo diário de água - escala 1 a 3: 1 < 1 L/dia, 2 1-2 L/dia, 3 > 2 L/dia.",
             options=[1, 2, 3],
             index=1,
         )
-        scc_label = st.selectbox("Monitora a ingestão calórica diária ?", list(yes_no_map.keys()))
+        scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
         faf = st.selectbox(
             "Frequência semanal de atividade física - escala 0 a 3: 0 nenhuma, 1 ~1-2x/sem, 2 ~3-4x/sem, 3 5x/sem ou mais.",
             options=[0, 1, 2, 3],
