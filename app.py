@@ -251,7 +251,7 @@ def render_hero(title, subtitle):
         f"""
         <div class="hero">
             <div>
-                <h1>{title}<br/>Pro</h1>
+                <h1>{title}</h1>
                 <p>{subtitle}</p>
             </div>
         </div>
@@ -366,59 +366,69 @@ if menu == "Prever":
     form_col, result_col = st.columns([1.55, 0.85], gap="large")
 
     with form_col:
-        with st.form("form_prever", clear_on_submit=False):
+        with st.form("form_prever", clear_on_submit=True):
             fcvc_opts = {
+                "Selecione...": None,
                 "1 - Raramente": 1,
                 "2 - Às vezes": 2,
                 "3 - Sempre": 3,
             }
             ncp_opts = {
+                "Selecione...": None,
                 "1 - Uma refeição": 1,
                 "2 - Duas refeições": 2,
                 "3 - Três refeições": 3,
                 "4 - Quatro ou mais": 4,
             }
             ch2o_opts = {
+                "Selecione...": None,
                 "1 - Menos de 1L": 1,
                 "2 - 1 a 2L": 2,
                 "3 - Mais de 2L": 3,
             }
             faf_opts = {
+                "Selecione...": None,
                 "0 - Nenhuma": 0,
                 "1 - 1 a 2 vezes": 1,
                 "2 - 3 a 4 vezes": 2,
                 "3 - 5 vezes ou mais": 3,
             }
             tue_opts = {
+                "Selecione...": None,
                 "0 - 0 a 2 horas": 0,
                 "1 - 3 a 5 horas": 1,
                 "2 - Mais de 5 horas": 2,
             }
+            gender_opts = ["Selecione..."] + list(gender_map.keys())
+            yes_no_opts = ["Selecione..."] + list(yes_no_map.keys())
+            caec_opts = ["Selecione..."] + list(caec_map.keys())
+            calc_opts = ["Selecione..."] + list(calc_map.keys())
+            mtrans_opts = ["Selecione..."] + list(mtrans_map.keys())
 
             st.markdown('<div class="card card-blue block-header personal-header"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
             c1, c2 = st.columns(2, gap="large")
             with c1:
-                gender_label = st.selectbox("Gênero", list(gender_map.keys()))
+                gender_label = st.selectbox("Gênero", gender_opts, index=0)
                 height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
             with c2:
                 age = st.number_input("Idade (anos)", min_value=14, max_value=61, value=30)
                 weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
 
             st.markdown('<div class="card card-green block-header habits-header"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
-            family_history_label = st.selectbox("Histórico familiar de excesso de peso?", list(yes_no_map.keys()))
-            favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", list(yes_no_map.keys()))
-            fcvc_label = st.selectbox("Frequência de consumo de vegetais (FCVC)", list(fcvc_opts.keys()), index=1)
-            ncp_label = st.selectbox("Número de refeições principais por dia (NCP)", list(ncp_opts.keys()), index=2)
-            caec_label = st.selectbox("Consumo de lanches entre as refeições (CAEC)?", list(caec_map.keys()))
-            smoke_label = st.selectbox("Hábito de fumar?", list(yes_no_map.keys()))
-            ch2o_label = st.selectbox("Consumo diário de água (CH2O)", list(ch2o_opts.keys()), index=1)
-            scc_label = st.selectbox("Monitora a ingestão calórica diária?", list(yes_no_map.keys()))
+            family_history_label = st.selectbox("Histórico familiar de excesso de peso?", yes_no_opts, index=0)
+            favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", yes_no_opts, index=0)
+            fcvc_label = st.selectbox("Frequência de consumo de vegetais (FCVC)", list(fcvc_opts.keys()), index=0)
+            ncp_label = st.selectbox("Número de refeições principais por dia (NCP)", list(ncp_opts.keys()), index=0)
+            caec_label = st.selectbox("Consumo de lanches entre as refeições (CAEC)?", caec_opts, index=0)
+            smoke_label = st.selectbox("Hábito de fumar?", yes_no_opts, index=0)
+            ch2o_label = st.selectbox("Consumo diário de água (CH2O)", list(ch2o_opts.keys()), index=0)
+            scc_label = st.selectbox("Monitora a ingestão calórica diária?", yes_no_opts, index=0)
 
             st.markdown('<div class="card card-orange block-header activity-header"><strong>Atividade Física</strong></div>', unsafe_allow_html=True)
-            faf_label = st.selectbox("Frequência semanal de atividade física", list(faf_opts.keys()), index=1)
-            tue_label = st.selectbox("Tempo em dispositivos eletrônicos", list(tue_opts.keys()), index=1)
-            calc_label = st.selectbox("Consumo de bebida alcoólica?", list(calc_map.keys()))
-            mtrans_label = st.selectbox("Meio de transporte habitual", list(mtrans_map.keys()))
+            faf_label = st.selectbox("Frequência semanal de atividade física", list(faf_opts.keys()), index=0)
+            tue_label = st.selectbox("Tempo em dispositivos eletrônicos", list(tue_opts.keys()), index=0)
+            calc_label = st.selectbox("Consumo de bebida alcoólica?", calc_opts, index=0)
+            mtrans_label = st.selectbox("Meio de transporte habitual", mtrans_opts, index=0)
 
             bmi_preview = weight / (height ** 2)
             st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
@@ -428,6 +438,15 @@ if menu == "Prever":
 
         if submitted:
             try:
+                required = [
+                    gender_label, family_history_label, favc_label, fcvc_label, ncp_label,
+                    caec_label, smoke_label, ch2o_label, scc_label, faf_label, tue_label,
+                    calc_label, mtrans_label,
+                ]
+                if "Selecione..." in required:
+                    st.warning("Preencha todos os campos antes de prever.")
+                    st.stop()
+
                 gender = gender_map[gender_label]
                 family_history = yes_no_map[family_history_label]
                 favc = yes_no_map[favc_label]
