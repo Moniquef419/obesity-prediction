@@ -366,6 +366,17 @@ if menu == "Prever":
     form_col, result_col = st.columns([1.55, 0.85], gap="large")
 
     with form_col:
+        if st.button("Limpar formulário"):
+            for k in [
+                "p_gender", "p_age", "p_height", "p_weight", "p_family_history",
+                "p_favc", "p_fcvc", "p_ncp", "p_caec", "p_smoke", "p_ch2o",
+                "p_scc", "p_faf", "p_tue", "p_calc", "p_mtrans",
+            ]:
+                if k in st.session_state:
+                    del st.session_state[k]
+            st.session_state.pred_result = None
+            st.rerun()
+
         with st.form("form_prever", clear_on_submit=True):
             fcvc_opts = {
                 "Selecione...": None,
@@ -408,27 +419,27 @@ if menu == "Prever":
             st.markdown('<div class="card card-blue block-header personal-header"><strong>Dados Pessoais</strong></div>', unsafe_allow_html=True)
             c1, c2 = st.columns(2, gap="large")
             with c1:
-                gender_label = st.selectbox("Gênero", gender_opts, index=0)
-                height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01)
+                gender_label = st.selectbox("Gênero", gender_opts, index=0, key="p_gender")
+                height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01, key="p_height")
             with c2:
-                age = st.number_input("Idade (anos)", min_value=14, max_value=61, value=30)
-                weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1)
+                age = st.number_input("Idade (anos)", min_value=14, max_value=61, value=30, key="p_age")
+                weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1, key="p_weight")
 
             st.markdown('<div class="card card-green block-header habits-header"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
-            family_history_label = st.selectbox("Histórico familiar de excesso de peso?", yes_no_opts, index=0)
-            favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", yes_no_opts, index=0)
-            fcvc_label = st.selectbox("Frequência de consumo de vegetais (FCVC)", list(fcvc_opts.keys()), index=0)
-            ncp_label = st.selectbox("Número de refeições principais por dia (NCP)", list(ncp_opts.keys()), index=0)
-            caec_label = st.selectbox("Consumo de lanches entre as refeições (CAEC)?", caec_opts, index=0)
-            smoke_label = st.selectbox("Hábito de fumar?", yes_no_opts, index=0)
-            ch2o_label = st.selectbox("Consumo diário de água (CH2O)", list(ch2o_opts.keys()), index=0)
-            scc_label = st.selectbox("Monitora a ingestão calórica diária?", yes_no_opts, index=0)
+            family_history_label = st.selectbox("Histórico familiar de excesso de peso?", yes_no_opts, index=0, key="p_family_history")
+            favc_label = st.selectbox("Consumo frequente de alimentos muito calóricos?", yes_no_opts, index=0, key="p_favc")
+            fcvc_label = st.selectbox("Frequência de consumo de vegetais (FCVC)", list(fcvc_opts.keys()), index=0, key="p_fcvc")
+            ncp_label = st.selectbox("Número de refeições principais por dia (NCP)", list(ncp_opts.keys()), index=0, key="p_ncp")
+            caec_label = st.selectbox("Consumo de lanches entre as refeições (CAEC)?", caec_opts, index=0, key="p_caec")
+            smoke_label = st.selectbox("Hábito de fumar?", yes_no_opts, index=0, key="p_smoke")
+            ch2o_label = st.selectbox("Consumo diário de água (CH2O)", list(ch2o_opts.keys()), index=0, key="p_ch2o")
+            scc_label = st.selectbox("Monitora a ingestão calórica diária?", yes_no_opts, index=0, key="p_scc")
 
             st.markdown('<div class="card card-orange block-header activity-header"><strong>Atividade Física</strong></div>', unsafe_allow_html=True)
-            faf_label = st.selectbox("Frequência semanal de atividade física", list(faf_opts.keys()), index=0)
-            tue_label = st.selectbox("Tempo em dispositivos eletrônicos", list(tue_opts.keys()), index=0)
-            calc_label = st.selectbox("Consumo de bebida alcoólica?", calc_opts, index=0)
-            mtrans_label = st.selectbox("Meio de transporte habitual", mtrans_opts, index=0)
+            faf_label = st.selectbox("Frequência semanal de atividade física", list(faf_opts.keys()), index=0, key="p_faf")
+            tue_label = st.selectbox("Tempo em dispositivos eletrônicos", list(tue_opts.keys()), index=0, key="p_tue")
+            calc_label = st.selectbox("Consumo de bebida alcoólica?", calc_opts, index=0, key="p_calc")
+            mtrans_label = st.selectbox("Meio de transporte habitual", mtrans_opts, index=0, key="p_mtrans")
 
             bmi_preview = weight / (height ** 2)
             st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
