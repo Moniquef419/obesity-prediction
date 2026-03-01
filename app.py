@@ -368,7 +368,7 @@ if menu == "Prever":
     with form_col:
         if st.button("Limpar formulário"):
             for k in [
-                "p_gender", "p_age", "p_height", "p_weight", "p_family_history",
+                "p_gender", "p_age_txt", "p_height_txt", "p_weight_txt", "p_family_history",
                 "p_favc", "p_fcvc", "p_ncp", "p_caec", "p_smoke", "p_ch2o",
                 "p_scc", "p_faf", "p_tue", "p_calc", "p_mtrans",
             ]:
@@ -420,10 +420,10 @@ if menu == "Prever":
             c1, c2 = st.columns(2, gap="large")
             with c1:
                 gender_label = st.selectbox("Gênero", gender_opts, index=0, key="p_gender")
-                height = st.number_input("Altura (m)", min_value=1.45, max_value=1.98, value=1.70, step=0.01, key="p_height")
+                height_txt = st.text_input("Altura (m)", value="", placeholder="Ex.: 1,70", key="p_height_txt")
             with c2:
-                age = st.number_input("Idade (anos)", min_value=14, max_value=61, value=30, key="p_age")
-                weight = st.number_input("Peso (kg)", min_value=39.0, max_value=173.0, value=70.0, step=0.1, key="p_weight")
+                age_txt = st.text_input("Idade (anos)", value="", placeholder="Ex.: 30", key="p_age_txt")
+                weight_txt = st.text_input("Peso (kg)", value="", placeholder="Ex.: 70,0", key="p_weight_txt")
 
             st.markdown('<div class="card card-green block-header habits-header"><strong>Hábitos de Vida</strong></div>', unsafe_allow_html=True)
             family_history_label = st.selectbox("Histórico familiar de excesso de peso?", yes_no_opts, index=0, key="p_family_history")
@@ -441,8 +441,16 @@ if menu == "Prever":
             calc_label = st.selectbox("Consumo de bebida alcoólica?", calc_opts, index=0, key="p_calc")
             mtrans_label = st.selectbox("Meio de transporte habitual", mtrans_opts, index=0, key="p_mtrans")
 
-            bmi_preview = weight / (height ** 2)
-            st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
+            try:
+                h_prev = float(str(height_txt).replace(",", "."))
+                w_prev = float(str(weight_txt).replace(",", "."))
+                if h_prev > 0:
+                    bmi_preview = w_prev / (h_prev ** 2)
+                    st.info(f"IMC calculado automaticamente: {bmi_preview:.1f} kg/m²")
+                else:
+                    st.info("Preencha altura e peso para calcular o IMC.")
+            except Exception:
+                st.info("Preencha altura e peso para calcular o IMC.")
             b1, b2, b3 = st.columns([1, 3, 1])
             with b2:
                 submitted = st.form_submit_button("Prever Classificação")
@@ -452,10 +460,23 @@ if menu == "Prever":
                 required = [
                     gender_label, family_history_label, favc_label, fcvc_label, ncp_label,
                     caec_label, smoke_label, ch2o_label, scc_label, faf_label, tue_label,
-                    calc_label, mtrans_label,
+                    calc_label, mtrans_label, age_txt, height_txt, weight_txt,
                 ]
-                if "Selecione..." in required:
+                if "Selecione..." in required or any(str(v).strip() == "" for v in [age_txt, height_txt, weight_txt]):
                     st.warning("Preencha todos os campos antes de prever.")
+                    st.stop()
+
+                age = int(float(str(age_txt).replace(",", ".")))
+                height = float(str(height_txt).replace(",", "."))
+                weight = float(str(weight_txt).replace(",", "."))
+                if not (14 <= age <= 61):
+                    st.warning("Idade deve estar entre 14 e 61 anos.")
+                    st.stop()
+                if not (1.45 <= height <= 1.98):
+                    st.warning("Altura deve estar entre 1,45 e 1,98 m.")
+                    st.stop()
+                if not (39 <= weight <= 173):
+                    st.warning("Peso deve estar entre 39 e 173 kg.")
                     st.stop()
 
                 gender = gender_map[gender_label]
